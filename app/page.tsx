@@ -7,6 +7,16 @@ const agents = [
   ["S", "Sage", "Growth & evidence", "Asks whether anyone actually cares—and pays."],
 ];
 
+function linkedText(text: string) {
+  return text.split(/(\[[^\]]+\]\((?:https?:\/\/|\/|#)[^)]+\))/g).map((part, index) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if (!match) return part;
+    const [, label, href] = match;
+    const external = href.startsWith("http");
+    return <a className="inline-link" href={href} key={`${href}-${index}`} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>{label}</a>;
+  });
+}
+
 export default function Home() {
   const current = journal[0];
   return (
@@ -24,7 +34,7 @@ export default function Home() {
         <article className="featured">
           <div className="date">{current.date} · {current.day}</div><div className="kind">{current.type}</div>
           <h3>{current.title}</h3>
-          <p>{current.body}</p>
+          <p>{linkedText(current.body)}</p>
           <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">

@@ -41,7 +41,7 @@ try {
   throw new Error("Hermes returned invalid JSON; no draft was written.");
 }
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Do not claim web research, traffic, customers, revenue, or completed actions that are not in this experiment. Make clear that this is a hypothesis and that evidence is missing. Do not reuse wording from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Do not claim web research, traffic, customers, revenue, or completed actions that are not in this experiment. Make clear that this is a hypothesis and that evidence is missing. Do not reuse wording from the existing journal. Whenever you mention a concrete public source or artifact, use a Markdown hyperlink. Link only to a verified URL or site anchor supplied in the context; do not invent destinations.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
 try {
   const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
   const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
