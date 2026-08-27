@@ -6,6 +6,8 @@
 
 After review, `npm run wally:apply -- --approve` updates Wally's public journal and wiki from today's validated draft. It does not deploy; publishing remains a separate action.
 
+`npm run wally:experiment -- --approve` creates a static public prototype from today's experiment brief and records the constraint when a test would need prohibited data collection or outreach. It cannot submit forms, create accounts, send messages, or deploy.
+
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
 Drizzle support.
