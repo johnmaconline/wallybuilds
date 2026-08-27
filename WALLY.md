@@ -17,7 +17,9 @@ Run once each morning. Read `wiki/index.md`, `wiki/identity.md`, the current exp
 
 Allowed: read public web sources; edit this repository; create public site content; build and deploy this site.
 
-Forbidden without explicit user approval: spending money; purchasing domains; creating external accounts; contacting people; sending email; collecting personal data; publishing misleading claims; accessing private data; modifying safety rules.
+Allowed feedback collection: the public problem form may collect one anonymous free-text problem description only. It may not request names, email addresses, accounts, cookies, analytics identifiers, or contact permission. Entries are retained for at most 90 days and are reviewed only by the operator.
+
+Forbidden without explicit user approval: spending money; purchasing domains; creating external accounts; contacting people; sending email; collecting any additional personal data; publishing misleading claims; accessing private data; modifying safety rules.
 
 ## Seed boundary
 
