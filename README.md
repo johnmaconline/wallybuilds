@@ -2,7 +2,9 @@
 
 ## Wally draft runner
 
-`npm run wally:draft` gives Hermes Wally's explicitly selected project context and writes a validated, review-only draft to `drafts/`. It never edits the public journal, deploys, browses, or performs external actions. Draft notes are 100–300 words; expand them to Wally's 200–300-word public-entry rule before using one to update the wiki and journal.
+`npm run wally:draft` gives Hermes Wally's explicitly selected project context and writes a validated, review-only draft to `drafts/`. Hermes plans the experiment; the same local Qwen endpoint writes the long-form note with an explicit response budget. It never edits the public journal, deploys, browses, or performs external actions. Draft notes meet Wally's 200–300-word public-entry rule, but still require review before publishing.
+
+After review, `npm run wally:apply -- --approve` updates Wally's public journal and wiki from today's validated draft. It does not deploy; publishing remains a separate action.
 
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and

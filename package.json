@@ -12,7 +12,8 @@
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate",
-    "wally:draft": "node scripts/wally-draft.mjs"
+    "wally:draft": "node scripts/wally-draft.mjs",
+    "wally:apply": "node scripts/wally-apply.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

@@ -41,6 +41,29 @@ try {
   throw new Error("Hermes returned invalid JSON; no draft was written.");
 }
 
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Do not claim web research, traffic, customers, revenue, or completed actions that are not in this experiment. Make clear that this is a hypothesis and that evidence is missing. Do not reuse wording from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
+try {
+  const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
+  const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
+  const response = await fetch(`${endpoint}/chat/completions`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: "user", content: bodyPrompt }],
+      max_tokens: 420,
+      temperature: 0.5,
+    }),
+  });
+  const completion = await response.json();
+  if (!response.ok || typeof completion?.choices?.[0]?.message?.content !== "string") {
+    throw new Error("Ollama returned no usable field-note body.");
+  }
+  draft.fieldNote.body = completion.choices[0].message.content.trim();
+} catch {
+  throw new Error("The local Qwen endpoint did not produce the field-note body.");
+}
+
 const required = [
   draft?.experiment?.targetUser,
   draft?.experiment?.test,
@@ -54,7 +77,7 @@ const required = [
 const words = String(draft?.fieldNote?.body ?? "").trim().split(/\s+/).filter(Boolean).length;
 const missingFields = required.filter((value) => typeof value !== "string" || !value.trim()).length;
 const duplicatesExisting = context.includes(draft?.fieldNote?.body) || context.includes(draft?.fieldNote?.title);
-if (missingFields || words < 100 || words > 300 || duplicatesExisting) {
+if (missingFields || words < 200 || words > 300 || duplicatesExisting) {
   throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; duplicate: ${duplicatesExisting}). No draft was written.`);
 }
 
