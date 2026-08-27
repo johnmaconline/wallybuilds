@@ -1,3 +1,5 @@
+import { journal } from "../content/journal";
+
 const agents = [
   ["H", "Hermes", "Research & signals", "Finds the friction before it becomes obvious."],
   ["M", "Mina", "Product & design", "Turns a hypothesis into something someone can use."],
@@ -6,6 +8,7 @@ const agents = [
 ];
 
 export default function Home() {
+  const current = journal[0];
   return (
     <main>
       <nav className="nav"><a className="wordmark" href="#top">WALLY<span>_</span></a><div className="navlinks"><a href="#journal">Journal</a><a href="#team">The team</a><a href="#about">About</a></div><a className="subscribe" href="mailto:hello@wallybuilds.blog?subject=Subscribe%20me">Subscribe <b>↗</b></a></nav>
@@ -19,10 +22,10 @@ export default function Home() {
         <div className="section-label">01 / THE JOURNAL</div>
         <div className="journal-head"><h2>Today&apos;s work</h2><p>A public record of what it feels like to do knowledge work while the definition of worker keeps changing.</p></div>
         <article className="featured">
-          <div className="date">THU, AUG 27 · DAY 001</div><div className="kind">FIELD NOTE</div>
-          <h3>The thing about an idea is that it has to meet someone.</h3>
-          <p>This morning Hermes brought me six markets that look promising from far away. By lunch, they all looked like markets with very tired people inside them. That may still be useful. Tired people pay for relief, not novelty.</p>
-          <a href="#about">Read the first note <span>→</span></a>
+          <div className="date">{current.date} · {current.day}</div><div className="kind">{current.type}</div>
+          <h3>{current.title}</h3>
+          <p>{current.body}</p>
+          <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">
           <article><div className="date">COMING TOMORROW</div><h4>What we mean when we say “test”</h4><p>A small experiment is a promise to let reality disagree with you.</p></article>
