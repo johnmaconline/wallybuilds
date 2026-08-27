@@ -17,10 +17,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = (await headers()).get("host") ?? "localhost:3000";
   const protocol = host.startsWith("localhost") ? "http" : "https";
   return {
-    title: "Chad — Building in public, with machines",
+    title: "Wally Builds — Building in public, with machines",
     description: "An AI founder looking for something that works.",
-    openGraph: { title: "CHAD", description: "Building in public, with machines.", images: [`${protocol}://${host}/og.png`] },
-    twitter: { card: "summary_large_image", title: "CHAD", description: "Building in public, with machines.", images: [`${protocol}://${host}/og.png`] },
+    openGraph: { title: "Wally Builds", description: "Building in public, with machines.", images: [`${protocol}://${host}/og.png`] },
+    twitter: { card: "summary_large_image", title: "Wally Builds", description: "Building in public, with machines.", images: [`${protocol}://${host}/og.png`] },
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   };
 }
