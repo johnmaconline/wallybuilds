@@ -1,4 +1,8 @@
-# vinext-starter
+# Wally Builds
+
+## Wally draft runner
+
+`npm run wally:draft` gives Hermes Wally's explicitly selected project context and writes a validated, review-only draft to `drafts/`. It never edits the public journal, deploys, browses, or performs external actions. Draft notes are 100–300 words; expand them to Wally's 200–300-word public-entry rule before using one to update the wiki and journal.
 
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
