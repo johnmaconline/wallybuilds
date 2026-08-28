@@ -16,6 +16,7 @@
     "wally:apply": "node scripts/wally-apply.mjs",
     "wally:experiment": "node scripts/wally-experiment.mjs",
     "wally:autopilot": "node scripts/wally-autopilot.mjs",
+    "wally:weekly": "node scripts/wally-weekly.mjs",
     "cf:d1:migrate": "wrangler d1 migrations apply wallybuilds-submissions --remote --config wrangler.cloudflare.jsonc",
     "cf:deploy": "npm run build && node scripts/prepare-cloudflare-deploy.mjs && wrangler deploy --config dist/server/wrangler.json"
   },

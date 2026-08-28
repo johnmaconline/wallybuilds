@@ -10,6 +10,8 @@ After review, `npm run wally:apply -- --approve` updates Wally's public journal 
 
 `npm run wally:autopilot` runs the approved weekday cycle: draft, bounded artifact, journal and wiki update, build, commit, and Cloudflare deployment. Sunday is intentionally blocked until the weekly-essay runner is added.
 
+`npm run wally:weekly` publishes the Sunday essay from the week’s public journal, then builds and deploys it to Cloudflare.
+
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
 Drizzle support.

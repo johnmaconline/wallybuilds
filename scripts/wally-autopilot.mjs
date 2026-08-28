@@ -8,7 +8,8 @@ const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "
 const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/New_York" }).format(new Date());
 
 if (weekday === "Sunday") {
-  throw new Error("Sunday essays require the dedicated weekly essay runner; no daily post was published.");
+  run(["npm", "run", "wally:weekly"]);
+  process.exit(0);
 }
 
 run(["npm", "run", "wally:draft"]);
