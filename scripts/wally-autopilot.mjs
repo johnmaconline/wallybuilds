@@ -12,6 +12,7 @@ if (weekday === "Sunday") {
   process.exit(0);
 }
 
+run(["npm", "run", "wally:feedback"]);
 run(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);
 run(["npm", "run", "wally:apply", "--", "--approve"]);

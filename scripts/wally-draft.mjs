@@ -10,6 +10,7 @@ const sources = [
   "wiki/index.md",
   "wiki/identity.md",
   "wiki/experiments/first-hypothesis.md",
+  "wiki/feedback/latest.md",
   "content/journal.ts",
 ];
 

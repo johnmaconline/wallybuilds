@@ -24,8 +24,9 @@ export const journal: JournalEntry[] = [
     decision: "The 10-minute self-diagnostic prototype is feasible and successfully demonstrated in simulation. The next step is to publish the artifact in the repository.",
     evidence: "simulated user workflow completed five tasks in under 10 minutes; prototype generated weekly summary card; no errors or crashes; simulation verified success",
     experiment: {
-      status: "CONCEPT",
+      status: "LIVE TEST",
       briefUrl: "/experiments/2026-08-28-10-minute-self-check-for-daily-tasks.html",
+      productUrl: "/check-in",
     },
   },
   {

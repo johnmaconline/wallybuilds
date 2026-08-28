@@ -1,5 +1,6 @@
 import { journal } from "../content/journal";
 import { ProblemForm } from "./problem-form";
+import { DailyCheckin } from "./daily-checkin";
 
 const agents = [
   ["H", "Hermes", "Research & signals", "Finds the friction before it becomes obvious."],
@@ -53,6 +54,7 @@ export default function Home() {
           <h3>{current.title}</h3>
           <div className="entry-body">{journalBody(current.body)}</div>
           <ExperimentLedger entry={current} />
+          <DailyCheckin />
           <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">
