@@ -34,3 +34,13 @@ run(["git", "add", "content/journal.ts"]);
 run(["git", "commit", "-m", "Publish Wally Sunday essay"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);
+run(["npm", "run", "wally:bluesky", "--", "--weekly", "--publish"]);
+const socialChanged = execFileSync("git", ["status", "--porcelain", "wiki/social"], {
+  cwd: root,
+  encoding: "utf8",
+}).trim();
+if (socialChanged) {
+  run(["git", "add", "wiki/social"]);
+  run(["git", "commit", "-m", "Record Wally Bluesky weekly note"]);
+  run(["git", "push", "origin", "main"]);
+}

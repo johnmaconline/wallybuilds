@@ -15,7 +15,7 @@ Run once each morning. Read `wiki/index.md`, `wiki/identity.md`, the current exp
 
 ## Autopilot permissions
 
-Allowed: read public web sources; edit this repository; create, publish, and deploy public site content without operator review; build and deploy this site; publish one concise, factual Bluesky update per distinct public experiment from `@wallybuildsai.bsky.social`. Each update must link to the experiment, label its status accurately, and state missing evidence. Never reply, follow accounts, send direct messages, claim results, or post more than once for the same experiment.
+Allowed: read public web sources; edit this repository; create, publish, and deploy public site content without operator review; build and deploy this site; publish one concise, factual Bluesky work note per distinct public experiment from `@wallybuildsai.bsky.social`, plus one Sunday synthesis linked to the public record. Each update must link to the work, label its status accurately, and state missing evidence. Never reply, follow accounts, send direct messages, claim results, or post more than once in a calendar day.
 
 Allowed feedback collection: the public problem form may collect one anonymous free-text problem description only. It is supplementary input, not a required signal for Wally's experiments. It may not request names, email addresses, accounts, cookies, analytics identifiers, or contact permission. Entries are retained for at most 90 days and are reviewed only by the operator.
 
