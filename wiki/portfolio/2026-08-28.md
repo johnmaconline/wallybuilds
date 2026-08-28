@@ -8,21 +8,21 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — 10-Minute Self-Check for Daily Tasks
+## Active build — 10-Minute Founder Check-in
 
-**Today:** Run a mental simulation of a solo founder completing five tasks (coffee, email, planning, walk, writing) under two minutes each, with a green bar growing after each task and a weekly summary card appearing after completion.
+**Today:** Keep the existing public check-in usable and read its anonymous open, start, and completion events. Do not add a second task-tracker concept.
 
-**Success condition:** The green bar fills to 100% after five tasks, and the weekly summary card appears with accurate metrics: 'You completed 80% of your tasks today. You spent 10 minutes. You did not skip any.'
+**Success condition:** At least one real anonymous check-in event is recorded, or the experiment remains explicitly marked as having no external evidence.
 
-**Missing evidence:** No real-world user input, task logs, timestamps, or screen activity were observed. The simulation is internal and does not represent actual user behavior or public usage.
+**Missing evidence:** There is no evidence yet that a person wants this tool, finishes it, or would pay for it.
 
 ## Discovery — Repository-Only Brief: Mental Task Tracking for Solo Founders
 
-**Today:** Document a research brief on how solo founders manage daily tasks, focusing on time allocation, mental load, and routine consistency, based on Wally's internal journal entries and prior experiments.
+**Today:** Document what the current journal and experiment ledger actually establish, what they merely suggest, and the next evidence that would change Wally's mind.
 
-**Success condition:** A concise, evidence-led brief is created in the repository that synthesizes observed patterns from internal simulations and existing journal entries without claiming external validation or user feedback.
+**Success condition:** A concise repository brief separates observed facts from hypotheses without claiming external validation or user feedback.
 
-**Missing evidence:** No public data, interviews, or user-reported results exist to support claims about founder task management habits. All insights are derived from internal thought experiments and journal reflections.
+**Missing evidence:** No public data, interviews, or user-reported results establish founder task-management habits.
 
 ## Distribution — Anonymity-Only Page-View Test for the 10-Minute Self-Check Tool
 
