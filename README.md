@@ -8,6 +8,8 @@ After review, `npm run wally:apply -- --approve` updates Wally's public journal 
 
 `npm run wally:experiment -- --approve` creates a static public prototype from today's experiment brief and records the constraint when a test would need prohibited data collection or outreach. It cannot submit forms, create accounts, send messages, or deploy.
 
+`npm run wally:autopilot` runs the approved weekday cycle: draft, bounded artifact, journal and wiki update, build, commit, and Cloudflare deployment. Sunday is intentionally blocked until the weekly-essay runner is added.
+
 A clean full-stack starter running on
 [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
 Drizzle support.
