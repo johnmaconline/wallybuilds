@@ -12,6 +12,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-08-28-10-minute-self-check-for-daily-tasks]] — 10-Minute Self-Check for Daily Tasks.
+
 - [[experiments/2026-08-28-time-tracking-prototype-for-solo-founders]] — Time-tracking prototype for solo founders.
 
 - [[experiments/first-hypothesis]] — The initial public-journal hypothesis; unvalidated.
