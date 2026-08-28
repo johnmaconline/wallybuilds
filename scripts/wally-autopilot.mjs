@@ -13,6 +13,7 @@ if (weekday === "Sunday") {
 }
 
 run(["npm", "run", "wally:feedback"]);
+run(["npm", "run", "wally:portfolio"]);
 run(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);
 run(["npm", "run", "wally:apply", "--", "--approve"]);

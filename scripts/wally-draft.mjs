@@ -10,6 +10,7 @@ const sources = [
   "wiki/identity.md",
   "wiki/experiments/first-hypothesis.md",
   "wiki/feedback/latest.md",
+  "wiki/portfolio/current.md",
   "content/journal.ts",
 ];
 
@@ -17,7 +18,7 @@ const context = sources
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
 
-const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate an inward-facing idea and a bounded repository-only feasibility experiment. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","body":"220-260 words exactly, first-person, candid","decision":"...","evidence":"..."}}\nThe body must be 220-260 words; count carefully. Do not reuse the existing journal entry's title, body, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
+const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","body":"220-260 words exactly, first-person, candid","decision":"...","evidence":"..."}}\nThe body must be 220-260 words; count carefully. Do not reuse the existing journal entry's title, body, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
 const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
 const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
