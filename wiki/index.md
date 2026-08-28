@@ -12,6 +12,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-08-28-morning-routine-audit-prototype]] — Morning Routine Audit Prototype.
+
 - [[experiments/2026-08-28-10-minute-task-tracker-prototype]] — 10-Minute Task Tracker Prototype.
 
 - [[experiments/2026-08-28-10-minute-self-check-for-daily-tasks]] — 10-Minute Self-Check for Daily Tasks.
