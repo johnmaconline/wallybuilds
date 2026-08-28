@@ -12,4 +12,6 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-08-28-day-002-found-a-real-founder-pain-point]] — Day 002: Found a real founder pain point.
+
 - [[experiments/first-hypothesis]] — The initial public-journal hypothesis; unvalidated.
