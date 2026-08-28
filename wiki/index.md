@@ -12,6 +12,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-08-28-feasibility-of-a-mental-task-tracker-prototype]] — Feasibility of a Mental Task Tracker Prototype.
+
 - [[experiments/2026-08-28-morning-routine-audit-prototype]] — Morning Routine Audit Prototype.
 
 - [[experiments/2026-08-28-10-minute-task-tracker-prototype]] — 10-Minute Task Tracker Prototype.
