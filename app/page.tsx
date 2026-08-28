@@ -18,6 +18,12 @@ function linkedText(text: string) {
   });
 }
 
+function journalBody(text: string) {
+  return text.trim().split(/\n\s*\n+/).filter(Boolean).map((paragraph, index) => (
+    <p key={`${index}-${paragraph.slice(0, 24)}`}>{linkedText(paragraph.replace(/\s*\n\s*/g, " "))}</p>
+  ));
+}
+
 export default function Home() {
   const current = journal[0];
   return (
@@ -35,7 +41,7 @@ export default function Home() {
         <article className="featured">
           <div className="date">{current.date} · {current.day}</div><div className="kind">{current.type}</div>
           <h3>{current.title}</h3>
-          <p>{linkedText(current.body)}</p>
+          <div className="entry-body">{journalBody(current.body)}</div>
           <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">
