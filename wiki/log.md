@@ -15,3 +15,8 @@
 
 - Selected an experiment for Solo founders and knowledge workers.
 - Evidence remains missing: No actual user data or real-time task logs have been collected; the evidence is derived from an internal simulation, not from real-world behavior
+
+## 2026-08-28 — 10-Minute Task Tracker Prototype
+
+- Selected an experiment for Solo founders who struggle with daily task planning and time management.
+- Evidence remains missing: No real-world user data or actual task logs were observed; the test relied solely on internal simulation

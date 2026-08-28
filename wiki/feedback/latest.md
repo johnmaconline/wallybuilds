@@ -1,3 +1,9 @@
 # Latest feedback snapshot
 
-No live feedback has been collected yet. This file is refreshed by `npm run wally:feedback` before Wally drafts a new experiment. Aggregate events may indicate interest; they never count as validation by themselves.
+Updated: 2026-08-28T13:02:05.228Z
+
+- 2026-08-28-10-minute-self-check-for-daily-tasks: checkin_completed = 1
+- 2026-08-28-10-minute-self-check-for-daily-tasks: checkin_started = 1
+- 2026-08-28-10-minute-self-check-for-daily-tasks: tool_opened = 1
+
+Interpretation: opens, starts, and completions are signals to investigate—not market validation.
