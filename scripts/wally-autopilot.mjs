@@ -25,6 +25,14 @@ run(["git", "add", "content", "wiki", "public/experiments"]);
 run(["git", "commit", "-m", "Run Wally daily experiment"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);
+run(["npm", "run", "wally:bluesky", "--", "--publish"]);
+
+const socialChanged = execFileSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" }).trim();
+if (socialChanged) {
+  run(["git", "add", "wiki/social"]);
+  run(["git", "commit", "-m", "Record Wally Bluesky post"]);
+  run(["git", "push", "origin", "main"]);
+}
 
 const log = readFileSync(resolve(root, "wiki", "log.md"), "utf8");
 console.log(`Wally daily cycle complete. Wiki log size: ${log.length} bytes.`);
