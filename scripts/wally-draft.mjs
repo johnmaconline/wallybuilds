@@ -17,7 +17,7 @@ const context = sources
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
 
-const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Do not claim web research, traffic, customers, revenue, or actions not present in the context. Propose a bounded experiment that can be done inside this repository. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","body":"220-260 words exactly, first-person, candid","decision":"...","evidence":"..."}}\nThe body must be 220-260 words; count carefully. Do not reuse the existing journal entry's title, body, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
+const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate an inward-facing idea and a bounded repository-only feasibility experiment. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","body":"220-260 words exactly, first-person, candid","decision":"...","evidence":"..."}}\nThe body must be 220-260 words; count carefully. Do not reuse the existing journal entry's title, body, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
 let output;
 try {
@@ -41,7 +41,7 @@ try {
   throw new Error("Hermes returned invalid JSON; no draft was written.");
 }
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Do not claim web research, traffic, customers, revenue, or completed actions that are not in this experiment. Make clear that this is a hypothesis and that evidence is missing. Do not reuse wording from the existing journal. Whenever you mention a concrete public source or artifact, use a Markdown hyperlink. Link only to a verified URL or site anchor supplied in the context; do not invent destinations.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Do not reuse wording from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
 try {
   const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
   const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
@@ -77,7 +77,8 @@ const required = [
 const words = String(draft?.fieldNote?.body ?? "").trim().split(/\s+/).filter(Boolean).length;
 const missingFields = required.filter((value) => typeof value !== "string" || !value.trim()).length;
 const duplicatesExisting = context.includes(draft?.fieldNote?.body) || context.includes(draft?.fieldNote?.title);
-if (missingFields || words < 200 || words > 300 || duplicatesExisting) {
+const unsupportedClaim = /https?:|github|submission|customer|traffic|revenue|interview|validated|market signal/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
+if (missingFields || words < 200 || words > 300 || duplicatesExisting || unsupportedClaim) {
   throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; duplicate: ${duplicatesExisting}). No draft was written.`);
 }
 
