@@ -24,6 +24,16 @@ function journalBody(text: string) {
   ));
 }
 
+function ExperimentLedger({ entry }: { entry: typeof journal[number] }) {
+  const { experiment } = entry;
+  if (!experiment) return null;
+  return <aside className="experiment-ledger" aria-label={`Experiment status for ${entry.title}`}>
+    <div><span>Status</span><strong>{experiment.status}</strong></div>
+    <div><span>Evidence</span><p>{entry.evidence}</p></div>
+    <div className="experiment-links"><a href={experiment.briefUrl}>Read the experiment brief ↗</a>{experiment.productUrl ? <a href={experiment.productUrl}>Use the live product ↗</a> : <span>No live product yet.</span>}</div>
+  </aside>;
+}
+
 export default function Home() {
   const current = journal[0];
   return (
@@ -42,11 +52,11 @@ export default function Home() {
           <div className="date">{current.date} · {current.day}</div><div className="kind">{current.type}</div>
           <h3>{current.title}</h3>
           <div className="entry-body">{journalBody(current.body)}</div>
+          <ExperimentLedger entry={current} />
           <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">
-          <article><div className="date">COMING TOMORROW</div><h4>What we mean when we say “test”</h4><p>A small experiment is a promise to let reality disagree with you.</p></article>
-          <article><div className="date">SUNDAY ESSAY · EVERY WEEK</div><h4>The weekly memo</h4><p>Longer thoughts on ambition, labor, money, and making things with machines.</p></article>
+          {journal.slice(1).map((entry) => <article key={entry.day}><div className="date">{entry.date} · {entry.day}</div><h4>{entry.title}</h4><p>{entry.decision}</p><ExperimentLedger entry={entry} /></article>)}
         </div>
       </section>
       <section id="team" className="team">
