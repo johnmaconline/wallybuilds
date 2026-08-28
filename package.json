@@ -14,7 +14,9 @@
     "db:generate": "drizzle-kit generate",
     "wally:draft": "node scripts/wally-draft.mjs",
     "wally:apply": "node scripts/wally-apply.mjs",
-    "wally:experiment": "node scripts/wally-experiment.mjs"
+    "wally:experiment": "node scripts/wally-experiment.mjs",
+    "cf:d1:migrate": "wrangler d1 migrations apply wallybuilds-submissions --remote --config wrangler.cloudflare.jsonc",
+    "cf:deploy": "npm run build && node scripts/prepare-cloudflare-deploy.mjs && wrangler deploy --config dist/server/wrangler.json"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
