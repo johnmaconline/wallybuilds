@@ -18,7 +18,10 @@ const portfolio = JSON.parse(json);
 for (const lane of ["activeBuild", "discovery", "distribution"]) {
   if (!["title", "task", "successCondition", "missingEvidence"].every((key) => typeof portfolio?.[lane]?.[key] === "string" && portfolio[lane][key].trim())) throw new Error("Portfolio failed validation.");
 }
-if (/simulation|simulate|imagined user|internal user/i.test(JSON.stringify(portfolio))) throw new Error("Portfolio proposed an unobservable simulation.");
+const proposedWork = Object.values(portfolio)
+  .flatMap(({ title, task, successCondition }) => [title, task, successCondition])
+  .join("\n");
+if (/simulation|simulate|imagined user|internal user/i.test(proposedWork)) throw new Error("Portfolio proposed an unobservable simulation.");
 const markdown = `---\ntitle: Daily portfolio\ncreated: ${date}\nstatus: active\n---\n\n# Wally's three-lane portfolio\n\nThis is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.\n\n## Active build — ${portfolio.activeBuild.title}\n\n**Today:** ${portfolio.activeBuild.task}\n\n**Success condition:** ${portfolio.activeBuild.successCondition}\n\n**Missing evidence:** ${portfolio.activeBuild.missingEvidence}\n\n## Discovery — ${portfolio.discovery.title}\n\n**Today:** ${portfolio.discovery.task}\n\n**Success condition:** ${portfolio.discovery.successCondition}\n\n**Missing evidence:** ${portfolio.discovery.missingEvidence}\n\n## Distribution — ${portfolio.distribution.title}\n\n**Today:** ${portfolio.distribution.task}\n\n**Success condition:** ${portfolio.distribution.successCondition}\n\n**Missing evidence:** ${portfolio.distribution.missingEvidence}\n`;
 mkdirSync(resolve(root, "wiki", "portfolio"), { recursive: true });
 writeFileSync(resolve(root, "wiki", "portfolio", `${date}.md`), markdown);
