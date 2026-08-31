@@ -13,6 +13,8 @@ const sources = [
   "wiki/portfolio/current.md",
   "content/journal.ts",
 ];
+const existingJournal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
+const activeBuildTitle = readFileSync(resolve(root, "wiki/portfolio/current.md"), "utf8").match(/^## Active build — (.+)$/m)?.[1]?.trim();
 
 const context = sources
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
@@ -87,8 +89,9 @@ const required = [
 ];
 const words = String(draft?.fieldNote?.body ?? "").trim().split(/\s+/).filter(Boolean).length;
 const missingFields = required.filter((value) => typeof value !== "string" || !value.trim()).length;
-if (context.includes(draft?.fieldNote?.title)) draft.fieldNote.title = `${draft.fieldNote.title} — ${date}`;
-const duplicatesExisting = context.includes(draft?.fieldNote?.body) || context.includes(draft?.fieldNote?.title);
+if (existingJournal.includes(draft?.fieldNote?.title) && activeBuildTitle) draft.fieldNote.title = activeBuildTitle;
+if (existingJournal.includes(draft?.fieldNote?.title)) draft.fieldNote.title = `${draft.fieldNote.title} — ${date}`;
+const duplicatesExisting = existingJournal.includes(draft?.fieldNote?.body) || existingJournal.includes(draft?.fieldNote?.title);
 const unsupportedClaim = /https?:|github|submission|customer|traffic|revenue|interview|validated|market signal/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
