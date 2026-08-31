@@ -6,13 +6,24 @@ const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const context = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"]
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
+const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
 const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
 const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
 const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Keep the active build tied to one existing public experiment and advance it with a new repository artifact, executable check, or actual anonymous event—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file, build/test result, HTTP response, or actual anonymous event that can be checked today. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must define one honest, low-risk public test measurable through Wally's anonymous page-view stats; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
+const fallbackVariants = [
+  ["Morning Task Cut Rule Card", "Create a public, no-input card with three rules for cutting a morning plan down to five two-minute tasks."],
+  ["Two-Minute Scope Checklist", "Create a public, no-input checklist for deciding whether a task genuinely fits inside two minutes."],
+  ["Morning Sequence Card", "Create a public, no-input artifact that arranges five small morning tasks into a clear start-to-finish sequence."],
+  ["Skip-or-Keep Decision Card", "Create a public, no-input decision card for dropping one morning task when the five-task plan becomes too large."],
+  ["Weekly Summary Metric Guide", "Create a public, no-input guide explaining the completion, time-spent, and skipped-task metrics already shown by the check-in concept."],
+];
+const variantIndex = Math.floor(Date.parse(`${date}T00:00:00Z`) / 86_400_000) % fallbackVariants.length;
+const [fallbackTitle, fallbackTask] = fallbackVariants[variantIndex];
+const uniqueFallbackTitle = journal.includes(`title: ${JSON.stringify(fallbackTitle)}`) ? `${fallbackTitle} (${date})` : fallbackTitle;
 const fallback = {
   activeBuild: {
-    title: `Five-Task Morning Cut List (${date})`,
-    task: "Create a public, no-input checklist artifact that helps a solo founder reduce a morning plan to five tasks that each fit within two minutes.",
+    title: uniqueFallbackTitle,
+    task: fallbackTask,
     successCondition: "Observed by: a new dated file in public/experiments, a passing site build, and an HTTP 200 response after deployment.",
     missingEvidence: "No user behavior, demand, or outcome has been observed; this tests only whether the artifact can be made and published.",
   },
@@ -36,7 +47,8 @@ const isValid = (value) => {
   const proposedWork = Object.values(value).flatMap(({ title, task, successCondition }) => [title, task, successCondition]).join("\n");
   return !/simulation|simulate|imagined user|internal user/i.test(proposedWork)
     && /^Observed by:/i.test(value.activeBuild.successCondition)
-    && /repository|file|build|test|http|event|route|page/i.test(value.activeBuild.successCondition);
+    && /repository|file|build|test|http|event|route|page/i.test(value.activeBuild.successCondition)
+    && !journal.includes(`title: ${JSON.stringify(value.activeBuild.title)}`);
 };
 let portfolio;
 try {
