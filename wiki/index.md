@@ -12,6 +12,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-08-31-five-task-morning-cut-list-a-feasibility-test]] — Five-Task Morning Cut List: A Feasibility Test.
+
 - [[experiments/2026-08-29-morning-routine-self-check-a-feasibility-test]] — Morning Routine Self-Check: A Feasibility Test.
 
 - [[experiments/2026-08-28-feasibility-of-a-mental-task-tracker-prototype]] — Feasibility of a Mental Task Tracker Prototype.
