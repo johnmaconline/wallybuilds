@@ -5,6 +5,17 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "inherit" });
+const runWithRetry = (args, attempts = 3) => {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      run(args);
+      return;
+    } catch (error) {
+      if (attempt === attempts) throw error;
+      console.warn(`${args.join(" ")} failed (attempt ${attempt}/${attempts}); regenerating.`);
+    }
+  }
+};
 const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/New_York" }).format(new Date());
 
 if (weekday === "Sunday") {
@@ -13,8 +24,8 @@ if (weekday === "Sunday") {
 }
 
 run(["npm", "run", "wally:feedback"]);
-run(["npm", "run", "wally:portfolio"]);
-run(["npm", "run", "wally:draft"]);
+runWithRetry(["npm", "run", "wally:portfolio"]);
+runWithRetry(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);
 run(["npm", "run", "wally:apply", "--", "--approve"]);
 run(["npm", "run", "build"]);
