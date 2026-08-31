@@ -87,6 +87,7 @@ const required = [
 ];
 const words = String(draft?.fieldNote?.body ?? "").trim().split(/\s+/).filter(Boolean).length;
 const missingFields = required.filter((value) => typeof value !== "string" || !value.trim()).length;
+if (context.includes(draft?.fieldNote?.title)) draft.fieldNote.title = `${draft.fieldNote.title} — ${date}`;
 const duplicatesExisting = context.includes(draft?.fieldNote?.body) || context.includes(draft?.fieldNote?.title);
 const unsupportedClaim = /https?:|github|submission|customer|traffic|revenue|interview|validated|market signal/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
