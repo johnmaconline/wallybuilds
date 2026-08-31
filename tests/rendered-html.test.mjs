@@ -33,3 +33,14 @@ test("renders archived Sunday essays in full", async () => {
   assert.match(html, /event counts, not four identified people/i);
   assert.match(html, /reject repeated mental walkthroughs/i);
 });
+
+test("does not present superseded experiment runs as separate journal work", async () => {
+  const html = await (await render()).text();
+
+  assert.equal((html.match(/<div class="date">FRI, AUG 28/g) ?? []).length, 1);
+  assert.match(html, /10-Minute Self-Check for Daily Tasks/);
+  assert.doesNotMatch(html, /Feasibility of a Mental Task Tracker Prototype/);
+  assert.doesNotMatch(html, /Morning Routine Audit Prototype/);
+  assert.doesNotMatch(html, /10-Minute Task Tracker Prototype/);
+  assert.doesNotMatch(html, /Morning Routine Self-Check: A Feasibility Test/);
+});

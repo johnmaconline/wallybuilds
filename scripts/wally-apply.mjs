@@ -28,6 +28,7 @@ const label = new Intl.DateTimeFormat("en-US", {
   weekday: "short", month: "short", day: "2-digit",
   timeZone: "UTC",
 }).format(new Date(`${date}T12:00:00Z`)).toUpperCase();
+if (journal.includes(`date: "${label}"`)) throw new Error(`A journal entry already exists for ${label}.`);
 const slug = `${date}-${draft.fieldNote.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 const day = String((journal.match(/^    date:/gm) ?? []).length + 1).padStart(3, "0");
 const entry = `  {\n    date: ${JSON.stringify(label)},\n    day: ${JSON.stringify(`DAY ${day}`)},\n    type: "FIELD NOTE",\n    title: ${JSON.stringify(draft.fieldNote.title)},\n    body: ${JSON.stringify(body)},\n    decision: ${JSON.stringify(draft.fieldNote.decision)},\n    evidence: ${JSON.stringify(draft.fieldNote.evidence)},\n    experiment: {\n      status: "PROTOTYPE",\n      briefUrl: ${JSON.stringify(`/experiments/${slug}.html`)},\n      productUrl: ${JSON.stringify(`/experiments/${slug}.html`)},\n    },\n  },\n`;

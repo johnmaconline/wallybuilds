@@ -133,6 +133,10 @@ const rawJournal: JournalEntry[] = [
   },
 ];
 
-export const journal: JournalEntry[] = rawJournal.map((entry) =>
-  entry.day === "DAY 008" ? { ...entry, ...sundayEssayOverride } : entry,
-);
+// These runs repeated the same August 28 experiment without adding evidence.
+// Keep them in the repository record, but do not present them as distinct public work.
+const supersededDays = new Set(["DAY 002", "DAY 004", "DAY 005", "DAY 006", "DAY 007"]);
+
+export const journal: JournalEntry[] = rawJournal
+  .filter((entry) => !supersededDays.has(entry.day))
+  .map((entry) => entry.day === "DAY 008" ? { ...entry, ...sundayEssayOverride } : entry);
