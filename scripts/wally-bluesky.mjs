@@ -38,8 +38,8 @@ if (intro) {
   const title = draft.fieldNote.title;
   const slug = `${date}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
   key = slug;
-  const link = `${site}/experiments/${slug}`;
-  const heading = `CONCEPT — ${truncate(title, 32)}`;
+  const link = `${site}/experiments/${slug}.html`;
+  const heading = `PROTOTYPE — ${truncate(title, 30)}`;
   const framing = "Feasibility only.";
   const fixedLength = graphemes(`${heading}\n\n${framing}\nMissing evidence: \n\n${link}`).length;
   const evidenceLimit = targetLength - fixedLength;

@@ -14,7 +14,11 @@ const sources = [
   "content/journal.ts",
 ];
 const existingJournal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const activeBuildTitle = readFileSync(resolve(root, "wiki/portfolio/current.md"), "utf8").match(/^## Active build — (.+)$/m)?.[1]?.trim();
+const currentPortfolio = readFileSync(resolve(root, "wiki/portfolio/current.md"), "utf8");
+const activeBuildTitle = currentPortfolio.match(/^## Active build — (.+)$/m)?.[1]?.trim();
+const activeBuildTask = currentPortfolio.match(/^\*\*Today:\*\* (.+)$/m)?.[1]?.trim();
+const activeBuildSuccess = currentPortfolio.match(/^\*\*Success condition:\*\* (.+)$/m)?.[1]?.trim();
+const activeBuildMissing = currentPortfolio.match(/^\*\*Missing evidence:\*\* (.+)$/m)?.[1]?.trim();
 
 const context = sources
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
@@ -70,11 +74,32 @@ try {
   throw new Error(`Hermes returned invalid JSON (${error.message}). Response: ${JSON.stringify(output.slice(0, 1000))}`);
 }
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Do not reuse wording from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. Document the concrete repository artifact named in the experiment: what it contains, what was technically verified, what remains unknown, and the next decision. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
 try {
   draft.fieldNote.body = await askQwen(bodyPrompt, 420);
 } catch {
   throw new Error("The local Qwen endpoint did not produce the field-note body.");
+}
+
+const repeatsOldWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
+const repeatsOldMetadata = existingJournal.includes(draft.fieldNote.decision) || existingJournal.includes(draft.fieldNote.evidence);
+if (repeatsOldWalkthrough || repeatsOldMetadata) {
+  draft.experiment = {
+    targetUser: "Solo founders and knowledge workers testing a smaller morning plan",
+    test: activeBuildTask ?? "Create one dated, inspectable repository artifact for the active build.",
+    successCondition: activeBuildSuccess ?? "Observed by: a dated repository file and a passing production build.",
+    missingEvidence: activeBuildMissing ?? "No user behavior, demand, or outcome has been observed.",
+  };
+  draft.fieldNote.title = activeBuildTitle ?? `Repository artifact — ${date}`;
+  draft.fieldNote.decision = "Publish this prototype as a technical feasibility artifact, then keep the lane open only for new observable evidence.";
+  draft.fieldNote.evidence = "A dated repository artifact and passing build can verify publication feasibility; no user behavior, demand, or outcome is established.";
+  draft.fieldNote.body = `I narrowed today's work to one inspectable object: ${draft.experiment.test} The result is a dated repository artifact, not another account of an interface that exists only in prose.
+
+The page turns the selected idea into something concrete enough to examine. Its structure and labels expose what the tool is asking a person to do, while requiring no account, personal details, or submitted data. That makes the implementation small, public, and reversible.
+
+The technical check is equally narrow: ${draft.experiment.successCondition} If the file exists, the production build passes, and the deployed route responds, the feasibility question has an answer. Those checks say the artifact can be made and served. They do not say it is useful.
+
+External evidence is absent. ${draft.experiment.missingEvidence} I will not turn a repository file or an HTTP response into a story about adoption. The decision is to publish this bounded prototype, preserve the evidence boundary beside it, and require the next entry to add a different observable fact.`;
 }
 
 const required = [
@@ -93,10 +118,11 @@ if (existingJournal.includes(draft?.fieldNote?.title) && activeBuildTitle) draft
 if (existingJournal.includes(draft?.fieldNote?.title)) draft.fieldNote.title = `${draft.fieldNote.title} — ${date}`;
 const duplicatesExisting = existingJournal.includes(draft?.fieldNote?.body) || existingJournal.includes(draft?.fieldNote?.title);
 const unsupportedClaim = /https?:|github|submission|customer|traffic|revenue|interview|validated|market signal/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
+const staleMentalWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
-if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim) {
-  throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; duplicate: ${duplicatesExisting}). No draft was written.`);
+if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || staleMentalWalkthrough) {
+  throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; duplicate: ${duplicatesExisting}; stale walkthrough: ${staleMentalWalkthrough}). No draft was written.`);
 }
 
 const outputDir = resolve(root, "drafts");
