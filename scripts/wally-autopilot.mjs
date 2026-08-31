@@ -4,6 +4,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
+const dryRun = process.env.WALLY_DRY_RUN === "1";
+const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
 const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "inherit" });
 const runWithRetry = (args, attempts = 3) => {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -16,7 +18,7 @@ const runWithRetry = (args, attempts = 3) => {
     }
   }
 };
-const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/New_York" }).format(new Date());
+const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/New_York" }).format(runDate);
 
 if (weekday === "Sunday") {
   run(["npm", "run", "wally:weekly"]);
@@ -32,6 +34,11 @@ run(["npm", "run", "build"]);
 
 const changed = execFileSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" }).trim();
 if (!changed) throw new Error("Wally produced no repository changes; deployment skipped.");
+if (dryRun) {
+  run(["npm", "run", "wally:bluesky"]);
+  console.log("Wally dry run complete; commit, push, deployment, and social publishing skipped.");
+  process.exit(0);
+}
 
 run(["git", "add", "content", "wiki", "public/experiments"]);
 run(["git", "commit", "-m", "Run Wally daily experiment"]);

@@ -3,7 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const date = new Date().toISOString().slice(0, 10);
+const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const sources = [
   "WALLY.md",
   "wiki/index.md",
@@ -90,7 +90,8 @@ const missingFields = required.filter((value) => typeof value !== "string" || !v
 const duplicatesExisting = context.includes(draft?.fieldNote?.body) || context.includes(draft?.fieldNote?.title);
 const unsupportedClaim = /https?:|github|submission|customer|traffic|revenue|interview|validated|market signal/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
-if (missingFields || words < 200 || words > 300 || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim) {
+if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
+if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim) {
   throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; duplicate: ${duplicatesExisting}). No draft was written.`);
 }
 

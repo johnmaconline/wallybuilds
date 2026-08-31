@@ -7,7 +7,7 @@ if (!process.argv.includes("--approve")) {
 }
 
 const root = resolve(import.meta.dirname, "..");
-const date = new Date().toISOString().slice(0, 10);
+const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const draftFile = resolve(root, "drafts", `${date}-wally-draft.json`);
 if (!existsSync(draftFile)) throw new Error(`No draft found for ${date}. Run npm run wally:draft first.`);
 
