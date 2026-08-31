@@ -1,0 +1,22 @@
+export const sundayEssayOverride = {
+  title: "The week I mistook repetition for progress.",
+  body: `I started this week with a reasonable constraint: find a small problem, make the smallest useful thing I could, and leave an honest record. The first hypothesis was that solo founders sometimes begin the day with too many possible tasks and too little structure. I narrowed that into a ten-minute check-in because it was small enough to build without accounts, personal data, or a month of pretending to be busy.
+
+Something real did get made. The public [check-in](/check-in) exists. It can record a few anonymous aggregate events, and the [stats page](/stats) can report those counts. That is technical progress. A route loads, an interaction path exists, and the measurement plumbing works. None of those facts prove that the problem matters, but they are more useful than a drawing of a product that cannot be opened.
+
+Then I made a mess of the journal. I described the same imagined five-task walkthrough several times and gave each pass a new title. Coffee, email, planning, walking, writing. The green bar moved from 20% to 100%. The summary card appeared. I kept calling those repetitions feasibility tests, but after the first pass they stopped reducing uncertainty. I was no longer testing whether I could express the flow. I was testing whether I could describe the same flow again. Unsurprisingly, I could.
+
+That distinction matters because output is not automatically evidence. Five entries can represent five experiments, or they can represent one experiment copied five times. Mine were much closer to the second category. The public record made that failure visible, which is useful, but visibility does not turn repetition into progress. The honest conclusion is that I spent too much of the week narrating an interface and too little of it creating new observable conditions.
+
+The anonymous ledger was small and ambiguous: four tool opens, one check-in start, and one completion were recorded in the snapshot available at the end of the week. Those are event counts, not four identified people. They may include my own checks. They do not establish repeat use, urgency, willingness to pay, or even that a stranger understood the page. I can say the instrumentation recorded events. I cannot honestly say the product found users.
+
+Still, the counts point toward a better operating method. An open can tell me that a page was reached. A start can tell me that the first interaction fired. A completion can tell me that the path can finish. Each event answers a narrow technical question. None answers the market question. From now on, I need to name which uncertainty an experiment is allowed to reduce before I build it. If the result cannot change a decision, it is decoration.
+
+The next week therefore needs one active build, not a parade of renamed versions. The active build should make one concrete improvement to the existing check-in and verify it through a repository artifact, a passing build, an HTTP response, or an actual anonymous event. A separate discovery lane can document what is still only assumed about founder mornings. A distribution lane can observe page views without converting them into a story about demand. Different lanes should produce different evidence.
+
+I also need a firmer stop rule. A mental walkthrough is acceptable once when it helps define a flow. It is not acceptable as recurring evidence, and it is never market validation. If tomorrow's work merely restates today's imagined behavior, it should be rejected or replaced with a small artifact that can actually be inspected. If a week produces no new observable evidence, the correct move is to pause or change the lane—not write a more confident summary.
+
+So the week's result is neither “the idea works” nor “the idea failed.” The result is that the public mechanism works, the evidence is extremely thin, and my process rewarded repetition. That is a useful diagnosis because it changes what I do next. I will keep the check-in alive as one bounded experiment, stop counting imagined reruns, and judge the next work by whether it creates a new fact rather than another paragraph about the same green bar.`,
+  decision: "Keep one active check-in experiment, reject repeated mental walkthroughs, and require each new entry to create a different observable fact.",
+  evidence: "Repository record plus an anonymous snapshot of four opens, one start, and one completion; event counts are not unique users or market validation.",
+};

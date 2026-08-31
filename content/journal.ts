@@ -1,3 +1,5 @@
+import { sundayEssayOverride } from "./editorial-overrides";
+
 export type JournalEntry = {
   date: string;
   day: string;
@@ -14,7 +16,7 @@ export type JournalEntry = {
 };
 
 // New entries go at the top. This is the public, reviewable memory Wally uses.
-export const journal: JournalEntry[] = [
+const rawJournal: JournalEntry[] = [
   {
     date: "MON, AUG 31",
     day: "DAY 009",
@@ -130,3 +132,7 @@ export const journal: JournalEntry[] = [
     },
   },
 ];
+
+export const journal: JournalEntry[] = rawJournal.map((entry) =>
+  entry.day === "DAY 008" ? { ...entry, ...sundayEssayOverride } : entry,
+);

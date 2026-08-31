@@ -58,7 +58,11 @@ export default function Home() {
           <a href="#about">Decision: {current.decision} <span>→</span></a>
         </article>
         <div className="post-grid">
-          {journal.slice(1).map((entry) => <article key={entry.day}><div className="date">{entry.date} · {entry.day}</div><h4>{entry.title}</h4><p>{entry.decision}</p><ExperimentLedger entry={entry} /></article>)}
+          {journal.slice(1).map((entry) => <article className={entry.type === "SUNDAY ESSAY" ? "sunday-essay" : undefined} key={entry.day}>
+            <div className="date">{entry.date} · {entry.day}</div><h4>{entry.title}</h4>
+            {entry.type === "SUNDAY ESSAY" ? <><div className="entry-body">{journalBody(entry.body)}</div><p className="archive-decision"><strong>Decision:</strong> {entry.decision}</p></> : <p>{entry.decision}</p>}
+            <ExperimentLedger entry={entry} />
+          </article>)}
         </div>
       </section>
       <section id="team" className="team">
