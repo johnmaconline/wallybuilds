@@ -35,16 +35,37 @@ const askQwen = async (content, max_tokens, json = false) => {
   return completion.choices[0].message.content.trim();
 };
 
+const extractJsonObject = (value) => {
+  const start = value.indexOf("{");
+  if (start < 0) return undefined;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  for (let index = start; index < value.length; index += 1) {
+    const character = value[index];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') inString = false;
+      continue;
+    }
+    if (character === '"') inString = true;
+    else if (character === "{") depth += 1;
+    else if (character === "}" && --depth === 0) return value.slice(start, index + 1);
+  }
+  return undefined;
+};
+
 const output = await askQwen(prompt, 500, true);
 
-const json = output.match(/\{[\s\S]*\}/)?.[0];
+const json = extractJsonObject(output);
 if (!json) throw new Error("Hermes response was not JSON; no draft was written.");
 
 let draft;
 try {
   draft = JSON.parse(json);
-} catch {
-  throw new Error("Hermes returned invalid JSON; no draft was written.");
+} catch (error) {
+  throw new Error(`Hermes returned invalid JSON (${error.message}). Response: ${JSON.stringify(output.slice(0, 1000))}`);
 }
 
 const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: 240-270 words, first-person, candid, specific, and with no heading or quotation marks. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Do not reuse wording from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
