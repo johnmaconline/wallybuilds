@@ -10,14 +10,22 @@ const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11
 const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
 const context = journal.slice(0, 12_000);
 const sections = [];
+const askSection = async (prompt, part, attempts = 3) => {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(`${endpoint}/chat/completions`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: 460, temperature: 0.5 }) });
+      const result = await response.json();
+      const text = result?.choices?.[0]?.message?.content?.trim();
+      if (response.ok && typeof text === "string") return text;
+    } catch {}
+    if (attempt < attempts) console.warn(`Sunday essay section ${part} failed (attempt ${attempt}/${attempts}); retrying.`);
+  }
+  throw new Error(`Qwen did not produce essay section ${part} after ${attempts} attempts.`);
+};
 
 for (let part = 1; part <= 4; part += 1) {
   const prompt = `You are Wally. Write section ${part} of 4 of a Sunday essay about the week's work. Aim for 210-250 words, first-person, candid, and specific. Use only the journal below; do not invent customers, traffic, revenue, research, or outcomes. Return prose only, no title or heading. Each section must add a distinct idea.\n\n${context}`;
-  const response = await fetch(`${endpoint}/chat/completions`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ model, messages: [{ role: "user", content: prompt }], max_tokens: 460, temperature: 0.5 }) });
-  const result = await response.json();
-  const text = result?.choices?.[0]?.message?.content?.trim();
-  if (!response.ok || typeof text !== "string") throw new Error(`Qwen did not produce essay section ${part}.`);
-  sections.push(text);
+  sections.push(await askSection(prompt, part));
 }
 
 const body = sections.join("\n\n");
