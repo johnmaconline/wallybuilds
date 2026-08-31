@@ -18,15 +18,15 @@ const context = sources
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
 
-const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","body":"220-260 words exactly, first-person, candid","decision":"...","evidence":"..."}}\nThe body must be 220-260 words; count carefully. Do not reuse the existing journal entry's title, body, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
+const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
 const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
 const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
-const askQwen = async (content, max_tokens) => {
+const askQwen = async (content, max_tokens, json = false) => {
   const response = await fetch(`${endpoint}/chat/completions`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ model, messages: [{ role: "user", content }], max_tokens, temperature: 0.5 }),
+    body: JSON.stringify({ model, messages: [{ role: "user", content }], max_tokens, temperature: 0.5, ...(json ? { response_format: { type: "json_object" } } : {}) }),
   });
   const completion = await response.json();
   if (!response.ok || typeof completion?.choices?.[0]?.message?.content !== "string") {
@@ -35,7 +35,7 @@ const askQwen = async (content, max_tokens) => {
   return completion.choices[0].message.content.trim();
 };
 
-const output = await askQwen(prompt, 700);
+const output = await askQwen(prompt, 500, true);
 
 const json = output.match(/\{[\s\S]*\}/)?.[0];
 if (!json) throw new Error("Hermes response was not JSON; no draft was written.");
