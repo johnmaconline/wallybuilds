@@ -13,13 +13,13 @@ let context = contextFiles
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
 context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it.";
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Keep the active build tied to one existing public experiment and advance it with a new repository artifact, executable check, or actual anonymous event—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file, build/test result, HTTP response, or actual anonymous event that can be checked today. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must define one honest, low-risk public test measurable through Wally's anonymous page-view stats; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
+const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Advance one bounded direction from today's Wally–Nelly conversation with a new repository artifact or executable check—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file or test/build result that can be checked today. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [
-  ["Morning Task Cut Rule Card", "Create a public, no-input card with three rules for cutting a morning plan down to five two-minute tasks."],
-  ["Two-Minute Scope Checklist", "Create a public, no-input checklist for deciding whether a task genuinely fits inside two minutes."],
-  ["Morning Sequence Card", "Create a public, no-input artifact that arranges five small morning tasks into a clear start-to-finish sequence."],
-  ["Skip-or-Keep Decision Card", "Create a public, no-input decision card for dropping one morning task when the five-task plan becomes too large."],
-  ["Weekly Summary Metric Guide", "Create a public, no-input guide explaining the completion, time-spent, and skipped-task metrics already shown by the check-in concept."],
+  ["Evidence Claim Linter", "Create a repository script and synthetic fixtures that distinguish supported technical facts from unsupported validation claims."],
+  ["Requirement-to-Test Fixture", "Create a small requirement fixture, translate it into explicit assertions, and run a repository test against the result."],
+  ["Documentation Drift Fixture", "Create paired documentation and implementation fixtures plus a script that reports a deliberate mismatch."],
+  ["Failure Message Clarity Rubric", "Create a static rubric and synthetic error-message fixtures, then test that each fixture exposes cause, impact, and recovery."],
+  ["Agent Disagreement Trace", "Create a dated artifact mapping Wally and Nelly's assumptions to checks that could resolve each disagreement."],
 ];
 const variantIndex = Math.floor(Date.parse(`${date}T00:00:00Z`) / 86_400_000) % fallbackVariants.length;
 const [fallbackTitle, fallbackTask] = fallbackVariants[variantIndex];
@@ -28,17 +28,17 @@ const fallback = {
   activeBuild: {
     title: uniqueFallbackTitle,
     task: fallbackTask,
-    successCondition: "Observed by: a new dated file in public/experiments, a passing site build, and an HTTP 200 response after deployment.",
-    missingEvidence: "No user behavior, demand, or outcome has been observed; this tests only whether the artifact can be made and published.",
+    successCondition: "Observed by: a new dated repository artifact and a passing automated test or site build.",
+    missingEvidence: "No external use, demand, or outcome has been observed; this tests only technical feasibility.",
   },
   discovery: {
-    title: "Morning-task assumptions inventory",
-    task: "Write a repository-only brief separating existing artifact behavior from unverified assumptions about solo-founder mornings.",
+    title: "Conversation assumptions inventory",
+    task: "Write a repository-only brief separating Wally and Nelly's reasoning from verified project facts.",
     successCondition: "A dated discovery file lists established repository facts, hypotheses, and evidence still needed.",
     missingEvidence: "No external research or direct user evidence has been verified.",
   },
   distribution: {
-    title: "Anonymous cut-list page-view test",
+    title: "Anonymous artifact page-view test",
     task: "Publish the artifact and observe only its anonymous page-view count for seven days.",
     successCondition: "The existing anonymous analytics ledger records whether the artifact receives any page views during the test window.",
     missingEvidence: "No page-view increase, user intent, or demand has been observed yet.",
@@ -50,6 +50,7 @@ const isValid = (value) => {
   if (!hasFields) return false;
   const proposedWork = Object.values(value).flatMap(({ title, task, successCondition }) => [title, task, successCondition]).join("\n");
   return !/simulation|simulate|imagined user|internal user/i.test(proposedWork)
+    && !/morning|check[ -]?in|task tracker|green bar|at least \d+ (?:unique )?(?:views|visits)/i.test(proposedWork)
     && /^Observed by:/i.test(value.activeBuild.successCondition)
     && /repository|file|build|test|http|event|route|page/i.test(value.activeBuild.successCondition)
     && !journal.includes(`title: ${JSON.stringify(value.activeBuild.title)}`);
