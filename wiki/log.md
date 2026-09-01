@@ -40,3 +40,8 @@
 
 - Selected an experiment for Solo founders who struggle to structure their morning routines.
 - Evidence remains missing: No user behavior, demand, or outcome has been observed; this test verifies only whether the artifact can be created and published in the repository
+
+## 2026-09-01 — Morning Sequence Card
+
+- Selected an experiment for Solo founders and knowledge workers testing a smaller morning plan.
+- Evidence remains missing: No user behavior, demand, or outcome has been observed; this tests only whether the artifact can be made and published.
