@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -14,6 +15,8 @@ const sources = [
   "wiki/portfolio/current.md",
   "content/journal.ts",
 ];
+const conversation = `wiki/conversations/${date}.md`;
+if (existsSync(resolve(root, conversation))) sources.splice(-1, 0, conversation);
 const existingJournal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
 const currentPortfolio = readFileSync(resolve(root, "wiki/portfolio/current.md"), "utf8");
 const activeBuildTitle = currentPortfolio.match(/^## Active build — (.+)$/m)?.[1]?.trim();
@@ -21,9 +24,10 @@ const activeBuildTask = currentPortfolio.match(/^\*\*Today:\*\* (.+)$/m)?.[1]?.t
 const activeBuildSuccess = currentPortfolio.match(/^\*\*Success condition:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildMissing = currentPortfolio.match(/^\*\*Missing evidence:\*\* (.+)$/m)?.[1]?.trim();
 
-const context = sources
-  .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`)
+let context = sources
+  .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
+context += "\n\nIf a Wally–Nelly conversation is present, use its most useful disagreement to sharpen the field note. Describe it only as internal agent reasoning, never as user feedback or market evidence.";
 
 const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 

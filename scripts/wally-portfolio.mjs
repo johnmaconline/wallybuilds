@@ -1,12 +1,17 @@
 #!/usr/bin/env node
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
-const context = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"]
-  .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
+const conversation = `wiki/conversations/${date}.md`;
+const contextFiles = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"];
+if (existsSync(resolve(root, conversation))) contextFiles.push(conversation);
+let context = contextFiles
+  .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
+context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it.";
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
 const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Keep the active build tied to one existing public experiment and advance it with a new repository artifact, executable check, or actual anonymous event—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file, build/test result, HTTP response, or actual anonymous event that can be checked today. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must define one honest, low-risk public test measurable through Wally's anonymous page-view stats; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [

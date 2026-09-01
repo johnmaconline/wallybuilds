@@ -37,6 +37,7 @@ if (weekday === "Sunday") {
 }
 
 run(["npm", "run", "wally:feedback"]);
+runWithRetry(["npm", "run", "wally:conversation"], 2);
 runWithRetry(["npm", "run", "wally:portfolio"]);
 runWithRetry(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);

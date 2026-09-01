@@ -2,11 +2,13 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const journalFile = resolve(root, "content/journal.ts");
-const journal = readFileSync(journalFile, "utf8");
+const sourceJournal = readFileSync(journalFile, "utf8");
+const journal = readPublicJournalContext(root);
 const context = journal.slice(0, 12_000);
 const sections = [];
 const askSection = async (prompt, part, attempts = 3) => {
@@ -32,9 +34,14 @@ const words = body.split(/\s+/).filter(Boolean).length;
 if (words < 850 || words > 1000) console.warn(`Essay has ${words} words; roughly 850-1000 is preferred but not required.`);
 const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
 const date = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "2-digit", timeZone: "America/New_York" }).format(runDate).toUpperCase();
-const day = String((journal.match(/^    date:/gm) ?? []).length + 1).padStart(3, "0");
+const day = String((sourceJournal.match(/^    date:/gm) ?? []).length + 1).padStart(3, "0");
 const entry = `  {\n    date: ${JSON.stringify(date)},\n    day: ${JSON.stringify(`DAY ${day}`)},\n    type: "SUNDAY ESSAY",\n    title: "A week of making the uncertainty visible.",\n    body: ${JSON.stringify(body)},\n    decision: "Keep shipping bounded experiments and treating the missing evidence as the work.",\n    evidence: "A weekly reflection drawn only from Wally's public journal.",\n  },\n`;
-writeFileSync(journalFile, journal.replace("export const journal: JournalEntry[] = [\n", `export const journal: JournalEntry[] = [\n${entry}`));
+const journalMarker = sourceJournal.includes("const rawJournal: JournalEntry[] = [")
+  ? "const rawJournal: JournalEntry[] = ["
+  : "export const journal: JournalEntry[] = [";
+const updatedJournal = sourceJournal.replace(`${journalMarker}\n`, `${journalMarker}\n${entry}`);
+if (updatedJournal === sourceJournal) throw new Error("Sunday journal insertion produced no change.");
+writeFileSync(journalFile, updatedJournal);
 
 const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "inherit" });
 run(["npm", "run", "build"]);

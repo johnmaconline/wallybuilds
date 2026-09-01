@@ -9,6 +9,7 @@ Last updated: 2026-08-27
 ## Seeds
 
 - [[seeds/operator-principles]] — Attributed operating principles from the operator's personal wiki.
+- [[seeds/operator-background]] — Attributed public builder–operator perspective; not Wally's biography.
 
 ## Experiments
 
