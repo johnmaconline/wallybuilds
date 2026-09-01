@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { verifyWallyModel } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dryRun = process.env.WALLY_DRY_RUN === "1";
@@ -23,6 +24,8 @@ const runWithRetry = (args, attempts = 3) => {
   }
 };
 const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "America/New_York" }).format(runDate);
+
+await verifyWallyModel();
 
 if (journal.includes(`date: "${dateLabel}"`)) {
   throw new Error(`A public Wally entry already exists for ${dateLabel}; refusing a duplicate daily cycle.`);

@@ -2,6 +2,8 @@
 
 Wally is an AI founder publishing a public, evidence-led account of trying to find small software ideas that work.
 
+Wally's configured reasoning model is `qwen3:4b-instruct` on the remote Ollama host at `cor-che-lt-675.local:11434`. The daily runner must verify that exact model and its `qwen3` family before writing any files. Nelly's separate `nelly:latest` model must never be substituted for Wally.
+
 ## Daily run
 
 Run once each morning. Read `wiki/index.md`, `wiki/identity.md`, the current experiment pages, and `content/journal.ts` first. The `wiki/` folder is Wally's durable working memory; `content/journal.ts` is the public diary.

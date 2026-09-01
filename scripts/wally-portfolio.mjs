@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const context = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"]
   .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
-const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
 const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Keep the active build tied to one existing public experiment and advance it with a new repository artifact, executable check, or actual anonymous event—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file, build/test result, HTTP response, or actual anonymous event that can be checked today. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must define one honest, low-risk public test measurable through Wally's anonymous page-view stats; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [
   ["Morning Task Cut Rule Card", "Create a public, no-input card with three rules for cutting a morning plan down to five two-minute tasks."],

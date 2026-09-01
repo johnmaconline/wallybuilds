@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
@@ -26,8 +27,6 @@ const context = sources
 
 const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
-const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
-const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
 const askQwen = async (content, max_tokens, json = false) => {
   const response = await fetch(`${endpoint}/chat/completions`, {
     method: "POST",

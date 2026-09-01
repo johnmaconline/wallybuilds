@@ -2,12 +2,11 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const journalFile = resolve(root, "content/journal.ts");
 const journal = readFileSync(journalFile, "utf8");
-const endpoint = process.env.WALLY_OLLAMA_URL ?? "http://cor-che-lt-675.local:11434/v1";
-const model = process.env.WALLY_OLLAMA_MODEL ?? "qwen3:4b-instruct";
 const context = journal.slice(0, 12_000);
 const sections = [];
 const askSection = async (prompt, part, attempts = 3) => {
