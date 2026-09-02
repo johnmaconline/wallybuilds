@@ -7,6 +7,8 @@ import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-m
 const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const conversation = `wiki/conversations/${date}.md`;
+const conversationText = existsSync(resolve(root, conversation)) ? readFileSync(resolve(root, conversation), "utf8") : "";
+const carriedQuestion = conversationText.match(/^\*\*Question carried into the work:\*\* (.+)$/m)?.[1]?.trim();
 const contextFiles = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"];
 if (existsSync(resolve(root, conversation))) contextFiles.push(conversation);
 let context = contextFiles
@@ -30,7 +32,9 @@ const fallback = {
     task: fallbackTask,
     successCondition: "Observed by: a new dated repository artifact and a passing automated test or site build.",
     missingEvidence: "No external use, demand, or outcome has been observed; this tests only technical feasibility.",
-    philosophicalTension: "A technically legible artifact can expose assumptions, but it cannot establish that those assumptions matter outside the repository.",
+    philosophicalTension: carriedQuestion
+      ? `Open question from the Wally–Nelly dialogue: ${carriedQuestion}`
+      : "A technically legible artifact can expose assumptions, but it cannot establish that those assumptions matter outside the repository.",
   },
   discovery: {
     title: "Conversation assumptions inventory",
