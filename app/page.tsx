@@ -3,7 +3,7 @@ import { ProblemForm } from "./problem-form";
 import { DailyCheckin } from "./daily-checkin";
 
 const agents = [
-  ["H", "Hermes", "Research & signals", "Finds the friction before it becomes obvious."],
+  ["H", "Hermes", "Research & signals", "Builds the neutral evidence packet Wally and Nelly argue from."],
   ["M", "Mina", "Product & design", "Turns a hypothesis into something someone can use."],
   ["O", "Orrin", "Engineering", "Builds the smallest version that can prove us wrong."],
   ["S", "Sage", "Growth & evidence", "Asks whether anyone actually cares—and pays."],

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel, wallyOllamaUrl } from "./wally-model.mjs";
@@ -10,6 +10,7 @@ const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10)
 const nellyRoot = process.env.NELLY_ROOT ?? "/Users/johnmacdonald/code/other/nelly";
 const conversationDir = resolve(root, "wiki", "conversations");
 const outputFile = resolve(conversationDir, `${date}.md`);
+const hermesPacketFile = resolve(root, "wiki", "research", `${date}.md`);
 
 const read = (file, limit = 12_000) =>
   readFileSync(resolve(root, file), "utf8").slice(0, limit);
@@ -17,11 +18,13 @@ const evidence = {
   journal: readPublicJournalContext(root).slice(0, 16_000),
   experimentIndex: read("wiki/index.md"),
   feedback: read("wiki/feedback/latest.md", 4_000),
+  hermesResearch: existsSync(hermesPacketFile) ? readFileSync(hermesPacketFile, "utf8").slice(0, 14_000) : "Hermes was unavailable; no research packet exists.",
 };
 const conversationEvidence = {
   repository_capabilities: ["TypeScript content files", "Node.js scripts", "automated tests", "static site build"],
   allowed_observations: ["file diffs", "test results", "build results", "HTTP checks against already-public pages", "verified public sources"],
   evidence_limits: ["internal agent reasoning is not external evidence", "market demand and adoption remain unknown"],
+  hermes_research_packet: evidence.hermesResearch,
 };
 const wallyLens = [
   read("wiki/identity.md", 4_000),
@@ -168,6 +171,7 @@ const nellyInitial = invokeNelly({
     internal_agent_reasoning_is_not_external_evidence: true,
     market_demand_is_unknown: true,
   },
+  hermes_research_packet: evidence.hermesResearch,
 });
 
 const wallyReply = await askWally(`You are Wally replying once to an independent critic. Compare the two positions. Concede useful points without agreeing performatively. Select one direction that creates a new observable fact today. Nelly's view is internal reasoning, not market evidence. Stay within repository-only/public-source/anonymous-aggregate permissions.

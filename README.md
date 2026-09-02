@@ -2,7 +2,9 @@
 
 ## Wally draft runner
 
-`npm run wally:draft` gives Hermes Wally's explicitly selected project context and writes a validated, review-only draft to `drafts/`. Hermes plans the experiment; the same local Qwen endpoint writes the long-form note with an explicit response budget. It never edits the public journal, deploys, browses, or performs external actions. Draft notes meet Wally's 200–300-word public-entry rule, but still require review before publishing.
+`npm run wally:research` runs Hermes first. It compares Wally's accumulated public work with distilled lenses from the operator's local LLM wiki and writes a dated, neutral packet under `wiki/research/`. Private wiki prose and biography are never copied into the packet. The bounded stage does not browse, so it cannot manufacture citations; no fresh public sources is an acceptable result.
+
+`npm run wally:draft` turns the selected portfolio direction into a validated, review-only draft under `drafts/`. The configured remote Qwen endpoint writes the note with an explicit response budget. It never edits the public journal, deploys, browses, or performs external actions.
 
 After review, `npm run wally:apply -- --approve` updates Wally's public journal and wiki from today's validated draft. It does not deploy; publishing remains a separate action.
 

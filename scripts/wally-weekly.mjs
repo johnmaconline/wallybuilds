@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
+const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
+const runDay = process.env.WALLY_RUN_DATE ?? runDate.toISOString().slice(0, 10);
 const journalFile = resolve(root, "content/journal.ts");
 const sourceJournal = readFileSync(journalFile, "utf8");
 const journal = readPublicJournalContext(root);
-const context = journal.slice(0, 12_000);
+const internalFiles = [`wiki/research/${runDay}.md`, `wiki/conversations/${runDay}.md`];
+const internalContext = internalFiles.filter((file) => existsSync(resolve(root, file)))
+  .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8").slice(0, 8_000)}`).join("\n\n");
+const context = `${journal.slice(0, 12_000)}\n\n${internalContext}`;
 const sections = [];
 const askSection = async (prompt, part, attempts = 3) => {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -25,17 +30,16 @@ const askSection = async (prompt, part, attempts = 3) => {
 };
 
 for (let part = 1; part <= 4; part += 1) {
-  const prompt = `You are Wally. Write section ${part} of 4 of a Sunday essay about the week's work. Aim for 210-250 words, first-person, candid, and specific. Use only the journal below; do not invent customers, traffic, revenue, research, or outcomes. Return prose only, no title or heading. Each section must add a distinct idea.\n\n${context}`;
+  const prompt = `You are Wally. Write section ${part} of 4 of a Sunday essay about the week's work. Aim for 210-250 words, first-person, candid, and specific. Use only the supplied journal and today's internal Hermes/Wally/Nelly context; do not invent customers, traffic, revenue, research, or outcomes. Internal agent discussion may shape the reflection but is not evidence. Return prose only, no title or heading. Each section must add a distinct idea.\n\n${context}`;
   sections.push(await askSection(prompt, part));
 }
 
 const body = sections.join("\n\n");
 const words = body.split(/\s+/).filter(Boolean).length;
 if (words < 850 || words > 1000) console.warn(`Essay has ${words} words; roughly 850-1000 is preferred but not required.`);
-const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
 const date = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "2-digit", timeZone: "America/New_York" }).format(runDate).toUpperCase();
 const day = String((sourceJournal.match(/^    date:/gm) ?? []).length + 1).padStart(3, "0");
-const entry = `  {\n    date: ${JSON.stringify(date)},\n    day: ${JSON.stringify(`DAY ${day}`)},\n    type: "SUNDAY ESSAY",\n    title: "A week of making the uncertainty visible.",\n    body: ${JSON.stringify(body)},\n    decision: "Keep shipping bounded experiments and treating the missing evidence as the work.",\n    evidence: "A weekly reflection drawn only from Wally's public journal.",\n  },\n`;
+const entry = `  {\n    date: ${JSON.stringify(date)},\n    day: ${JSON.stringify(`DAY ${day}`)},\n    type: "SUNDAY ESSAY",\n    title: "A week of making the uncertainty visible.",\n    body: ${JSON.stringify(body)},\n    decision: "Keep shipping bounded experiments and treating the missing evidence as the work.",\n    evidence: "A weekly reflection grounded in Wally's public journal. Internal agent discussion shaped the reflection but is not evidence.",\n  },\n`;
 const journalMarker = sourceJournal.includes("const rawJournal: JournalEntry[] = [")
   ? "const rawJournal: JournalEntry[] = ["
   : "export const journal: JournalEntry[] = [";
@@ -50,7 +54,7 @@ if (process.env.WALLY_DRY_RUN === "1") {
   console.log("Wally weekly dry run complete; commit, push, deployment, and social publishing skipped.");
   process.exit(0);
 }
-run(["git", "add", "content/journal.ts"]);
+run(["git", "add", "content/journal.ts", "wiki/research", "wiki/conversations"]);
 run(["git", "commit", "-m", "Publish Wally Sunday essay"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);

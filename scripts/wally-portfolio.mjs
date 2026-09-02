@@ -7,9 +7,11 @@ import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-m
 const root = resolve(import.meta.dirname, "..");
 const date = process.env.WALLY_RUN_DATE ?? new Date().toISOString().slice(0, 10);
 const conversation = `wiki/conversations/${date}.md`;
+const research = `wiki/research/${date}.md`;
 const conversationText = existsSync(resolve(root, conversation)) ? readFileSync(resolve(root, conversation), "utf8") : "";
 const carriedQuestion = conversationText.match(/^\*\*Question carried into the work:\*\* (.+)$/m)?.[1]?.trim();
 const contextFiles = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "content/journal.ts"];
+if (existsSync(resolve(root, research))) contextFiles.push(research);
 if (existsSync(resolve(root, conversation))) contextFiles.push(conversation);
 let context = contextFiles
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");

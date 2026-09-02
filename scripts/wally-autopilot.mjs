@@ -31,13 +31,13 @@ if (journal.includes(`date: "${dateLabel}"`)) {
   throw new Error(`A public Wally entry already exists for ${dateLabel}; refusing a duplicate daily cycle.`);
 }
 
+run(["npm", "run", "wally:feedback"]);
+runWithRetry(["npm", "run", "wally:research"], 2);
+runWithRetry(["npm", "run", "wally:conversation"], 2);
 if (weekday === "Sunday") {
   run(["npm", "run", "wally:weekly"]);
   process.exit(0);
 }
-
-run(["npm", "run", "wally:feedback"]);
-runWithRetry(["npm", "run", "wally:conversation"], 2);
 runWithRetry(["npm", "run", "wally:portfolio"]);
 runWithRetry(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);

@@ -17,6 +17,8 @@ const sources = [
   "content/journal.ts",
 ];
 const conversation = `wiki/conversations/${date}.md`;
+const research = `wiki/research/${date}.md`;
+if (existsSync(resolve(root, research))) sources.splice(-1, 0, research);
 if (existsSync(resolve(root, conversation))) sources.splice(-1, 0, conversation);
 const existingJournal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
 const currentPortfolio = readFileSync(resolve(root, "wiki/portfolio/current.md"), "utf8");

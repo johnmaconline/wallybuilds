@@ -14,6 +14,7 @@
     "db:generate": "drizzle-kit generate",
     "wally:draft": "node scripts/wally-draft.mjs",
     "wally:feedback": "node scripts/wally-feedback.mjs",
+    "wally:research": "node scripts/wally-hermes.mjs",
     "wally:conversation": "node scripts/wally-nelly.mjs",
     "wally:portfolio": "node scripts/wally-portfolio.mjs",
     "wally:bluesky": "node scripts/wally-bluesky.mjs",
