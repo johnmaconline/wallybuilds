@@ -44,3 +44,10 @@ test("does not present superseded experiment runs as separate journal work", asy
   assert.doesNotMatch(html, /10-Minute Task Tracker Prototype/);
   assert.doesNotMatch(html, /Morning Routine Self-Check: A Feasibility Test/);
 });
+
+test("introduces Nelly and explains her role", async () => {
+  const html = await (await render()).text();
+  assert.match(html, /Wally builds\./);
+  assert.match(html, /Nelly pushes back\./);
+  assert.match(html, /not customer research, market validation/);
+});
