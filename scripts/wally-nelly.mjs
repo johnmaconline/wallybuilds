@@ -129,8 +129,8 @@ ${wallyLens}
 VERIFIED PROJECT EVIDENCE:
 ${JSON.stringify(conversationEvidence)}`, validInitial);
 
-const invokeNelly = (packet) => {
-  const result = spawnSync(process.execPath, [resolve(nellyRoot, "scripts", "nelly-review.mjs")], {
+const invokeNelly = (packet, script = "nelly-review.mjs") => {
+  const result = spawnSync(process.execPath, [resolve(nellyRoot, "scripts", script)], {
     cwd: nellyRoot,
     input: JSON.stringify(packet),
     encoding: "utf8",
@@ -200,6 +200,54 @@ const nellyFinal = nellyInitial.status === "unavailable"
       wally_reply: wallyReply,
     });
 
+const philosophicalClaim = /users? (?:said|reported|want)|customers? (?:said|reported|want)|market validated|proven demand|research (?:shows|proves)/i;
+const validOpening = (value) => ["position", "stakes", "question"].every(
+  (key) => typeof value?.[key] === "string" && value[key].trim(),
+) && value.question.trim().endsWith("?") && !philosophicalClaim.test(JSON.stringify(value));
+const validRejoinder = (value) => ["response", "concession", "question"].every(
+  (key) => typeof value?.[key] === "string" && value[key].trim(),
+) && value.question.trim().endsWith("?") && !philosophicalClaim.test(JSON.stringify(value));
+
+const wallyPhilosophy = await askWally(`You are Wally opening a short philosophical dialogue with Nelly. Identify the deeper question beneath the selected practical direction: what counts as knowledge, what building can and cannot reveal, who gains agency, what responsibility a builder carries, or when restraint is wiser. Take a real position rather than summarizing. Do not propose work or claim empirical support.
+
+Return JSON only with three nonempty strings: position, stakes, question. End question with a question mark.
+
+SELECTED DIRECTION:
+${JSON.stringify(wallyReply)}
+
+NELLY'S PRESSURE TEST:
+${JSON.stringify(nellyFinal)}`, validOpening);
+
+const nellyPhilosophy = invokeNelly({
+  mode: "philosophical_response",
+  date,
+  selected_direction: wallyReply.selected_direction,
+  wally_opening: wallyPhilosophy,
+}, "nelly-dialogue.mjs");
+
+const wallyRejoinder = nellyPhilosophy.status === "unavailable"
+  ? { response: "Nelly was unavailable, so the tension remains open.", concession: "No second viewpoint was produced.", question: "What assumption should be reopened when Nelly returns?" }
+  : await askWally(`You are Wally replying to Nelly's philosophical challenge. Engage her strongest point directly. Concede one real limitation, defend or revise your position, and ask a sharper question. Do not turn this into a product plan or claim evidence.
+
+Return JSON only with three nonempty strings: response, concession, question. End question with a question mark.
+
+YOUR OPENING:
+${JSON.stringify(wallyPhilosophy)}
+
+NELLY'S RESPONSE:
+${JSON.stringify(nellyPhilosophy)}`, validRejoinder);
+
+const nellyClosing = nellyPhilosophy.status === "unavailable"
+  ? nellyPhilosophy
+  : invokeNelly({
+      mode: "philosophical_closing",
+      date,
+      selected_direction: wallyReply.selected_direction,
+      wally_opening: wallyPhilosophy,
+      nelly_response: nellyPhilosophy,
+      wally_rejoinder: wallyRejoinder,
+    }, "nelly-dialogue.mjs");
+
 mkdirSync(conversationDir, { recursive: true });
 writeFileSync(outputFile, `---
 title: Wally–Nelly daily conversation
@@ -235,6 +283,40 @@ ${JSON.stringify(wallyReply, null, 2)}
 \`\`\`json
 ${JSON.stringify(nellyFinal, null, 2)}
 \`\`\`
+
+## Philosophical dialogue
+
+### Wally — opening
+
+${wallyPhilosophy.position}
+
+**Why it matters:** ${wallyPhilosophy.stakes}
+
+**Question:** ${wallyPhilosophy.question}
+
+### Nelly — response
+
+${nellyPhilosophy.reflection ?? nellyPhilosophy.reason}
+
+**Tension:** ${nellyPhilosophy.tension ?? "Nelly was unavailable."}
+
+**Question:** ${nellyPhilosophy.question ?? "The question remains open."}
+
+### Wally — rejoinder
+
+${wallyRejoinder.response}
+
+**Concession:** ${wallyRejoinder.concession}
+
+**Question:** ${wallyRejoinder.question}
+
+### Nelly — closing
+
+${nellyClosing.reflection ?? nellyClosing.reason}
+
+**Unresolved tension:** ${nellyClosing.tension ?? "Nelly was unavailable."}
+
+**Question carried into the work:** ${nellyClosing.question ?? "The question remains open."}
 `);
 
 console.log(`Wally–Nelly conversation written: wiki/conversations/${date}.md`);

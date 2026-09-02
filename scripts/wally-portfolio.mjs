@@ -11,9 +11,9 @@ const contextFiles = ["WALLY.md", "wiki/index.md", "wiki/feedback/latest.md", "c
 if (existsSync(resolve(root, conversation))) contextFiles.push(conversation);
 let context = contextFiles
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
-context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it.";
+context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it. Translate one unresolved philosophical tension into a concrete design choice, constraint, or falsifiable boundary in the active build.";
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. Advance one bounded direction from today's Wally–Nelly conversation with a new repository artifact or executable check—not another description or mental walkthrough. The active-build successCondition must begin "Observed by:" and name a repository file or test/build result that can be checked today. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
+const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. The activeBuild object must also have philosophicalTension: one concise sentence naming the Wally–Nelly tension that materially shapes the test. Advance one bounded direction from today's conversation with a new repository artifact or executable check—not another description or mental walkthrough. Make philosophicalTension affect the task, success condition, or evidence boundary; do not add it as decoration. The active-build successCondition must begin "Observed by:" and name a repository file or test/build result that can be checked today. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [
   ["Evidence Claim Linter", "Create a repository script and synthetic fixtures that distinguish supported technical facts from unsupported validation claims."],
   ["Requirement-to-Test Fixture", "Create a small requirement fixture, translate it into explicit assertions, and run a repository test against the result."],
@@ -30,6 +30,7 @@ const fallback = {
     task: fallbackTask,
     successCondition: "Observed by: a new dated repository artifact and a passing automated test or site build.",
     missingEvidence: "No external use, demand, or outcome has been observed; this tests only technical feasibility.",
+    philosophicalTension: "A technically legible artifact can expose assumptions, but it cannot establish that those assumptions matter outside the repository.",
   },
   discovery: {
     title: "Conversation assumptions inventory",
@@ -48,6 +49,7 @@ const isValid = (value) => {
   const hasFields = ["activeBuild", "discovery", "distribution"].every((lane) =>
     ["title", "task", "successCondition", "missingEvidence"].every((key) => typeof value?.[lane]?.[key] === "string" && value[lane][key].trim()));
   if (!hasFields) return false;
+  if (typeof value.activeBuild.philosophicalTension !== "string" || !value.activeBuild.philosophicalTension.trim()) return false;
   const proposedWork = Object.values(value).flatMap(({ title, task, successCondition }) => [title, task, successCondition]).join("\n");
   return !/simulation|simulate|imagined user|internal user/i.test(proposedWork)
     && !/morning|check[ -]?in|task tracker|green bar|at least \d+ (?:unique )?(?:views|visits)/i.test(proposedWork)
@@ -68,7 +70,7 @@ if (!isValid(portfolio)) {
   portfolio = fallback;
 }
 if (!isValid(portfolio)) throw new Error("Fallback portfolio failed validation.");
-const markdown = `---\ntitle: Daily portfolio\ncreated: ${date}\nstatus: active\n---\n\n# Wally's three-lane portfolio\n\nThis is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.\n\n## Active build — ${portfolio.activeBuild.title}\n\n**Today:** ${portfolio.activeBuild.task}\n\n**Success condition:** ${portfolio.activeBuild.successCondition}\n\n**Missing evidence:** ${portfolio.activeBuild.missingEvidence}\n\n## Discovery — ${portfolio.discovery.title}\n\n**Today:** ${portfolio.discovery.task}\n\n**Success condition:** ${portfolio.discovery.successCondition}\n\n**Missing evidence:** ${portfolio.discovery.missingEvidence}\n\n## Distribution — ${portfolio.distribution.title}\n\n**Today:** ${portfolio.distribution.task}\n\n**Success condition:** ${portfolio.distribution.successCondition}\n\n**Missing evidence:** ${portfolio.distribution.missingEvidence}\n`;
+const markdown = `---\ntitle: Daily portfolio\ncreated: ${date}\nstatus: active\n---\n\n# Wally's three-lane portfolio\n\nThis is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.\n\n## Active build — ${portfolio.activeBuild.title}\n\n**Today:** ${portfolio.activeBuild.task}\n\n**Success condition:** ${portfolio.activeBuild.successCondition}\n\n**Missing evidence:** ${portfolio.activeBuild.missingEvidence}\n\n**Philosophical tension:** ${portfolio.activeBuild.philosophicalTension}\n\n## Discovery — ${portfolio.discovery.title}\n\n**Today:** ${portfolio.discovery.task}\n\n**Success condition:** ${portfolio.discovery.successCondition}\n\n**Missing evidence:** ${portfolio.discovery.missingEvidence}\n\n## Distribution — ${portfolio.distribution.title}\n\n**Today:** ${portfolio.distribution.task}\n\n**Success condition:** ${portfolio.distribution.successCondition}\n\n**Missing evidence:** ${portfolio.distribution.missingEvidence}\n`;
 mkdirSync(resolve(root, "wiki", "portfolio"), { recursive: true });
 writeFileSync(resolve(root, "wiki", "portfolio", `${date}.md`), markdown);
 writeFileSync(resolve(root, "wiki", "portfolio", "current.md"), markdown);

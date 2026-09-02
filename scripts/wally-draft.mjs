@@ -23,13 +23,14 @@ const activeBuildTitle = currentPortfolio.match(/^## Active build — (.+)$/m)?.
 const activeBuildTask = currentPortfolio.match(/^\*\*Today:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildSuccess = currentPortfolio.match(/^\*\*Success condition:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildMissing = currentPortfolio.match(/^\*\*Missing evidence:\*\* (.+)$/m)?.[1]?.trim();
+const activeBuildTension = currentPortfolio.match(/^\*\*Philosophical tension:\*\* (.+)$/m)?.[1]?.trim();
 
 let context = sources
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
-context += "\n\nIf a Wally–Nelly conversation is present, use its most useful disagreement to sharpen the field note. Describe it only as internal agent reasoning, never as user feedback or market evidence.";
+context += "\n\nIf a Wally–Nelly conversation is present, explain how one philosophical tension materially changed the experiment's design, constraint, or evidence boundary. Describe it only as internal agent reasoning, never as user feedback or market evidence.";
 
-const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
+const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Let the portfolio's philosophical tension materially constrain the test or its evidence boundary. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
 const askQwen = async (content, max_tokens, json = false) => {
   const response = await fetch(`${endpoint}/chat/completions`, {
@@ -77,7 +78,7 @@ try {
   throw new Error(`Hermes returned invalid JSON (${error.message}). Response: ${JSON.stringify(output.slice(0, 1000))}`);
 }
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading or quotation marks. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. Document the concrete repository artifact named in the experiment: what it contains, what was technically verified, what remains unknown, and the next decision. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading or quotation marks. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. Document the concrete repository artifact named in the experiment: what it contains, what was technically verified, what remains unknown, and the next decision. Include one concise passage explaining how the Wally–Nelly philosophical tension changed a design choice or evidence boundary; identify it as internal debate, not evidence. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\n\nExisting project context:\n${context}`;
 try {
   draft.fieldNote.body = await askQwen(bodyPrompt, 420);
 } catch {
@@ -86,7 +87,8 @@ try {
 
 const repeatsOldWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const repeatsOldMetadata = existingJournal.includes(draft.fieldNote.decision) || existingJournal.includes(draft.fieldNote.evidence);
-if (repeatsOldWalkthrough || repeatsOldMetadata) {
+const omitsPhilosophicalInfluence = !/Wally|Nelly|internal (?:debate|dialogue)|philosophical tension/i.test(draft.fieldNote.body);
+if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence) {
   draft.experiment = {
     targetUser: "Builders evaluating a bounded repository prototype",
     test: activeBuildTask ?? "Create one dated, inspectable repository artifact for the active build.",
@@ -99,6 +101,8 @@ if (repeatsOldWalkthrough || repeatsOldMetadata) {
   draft.fieldNote.body = `I narrowed today's work to one inspectable object: ${draft.experiment.test} The result is a dated repository artifact, not another claim that exists only in prose.
 
 The artifact turns the selected idea into explicit criteria and synthetic examples that can be inspected. It requires no account, personal details, submissions, or invented participant behavior. That keeps the implementation small, public, and reversible.
+
+The internal Wally–Nelly debate changed the boundary: ${activeBuildTension ?? "making an artifact legible does not establish that it matters outside the repository."} I treated that tension as a constraint on what this test may claim, not as evidence for the idea.
 
 The technical check is equally narrow: ${draft.experiment.successCondition} If the file exists, the production build passes, and the deployed route responds, the feasibility question has an answer. Those checks say the artifact can be made and served. They do not say it is useful.
 
