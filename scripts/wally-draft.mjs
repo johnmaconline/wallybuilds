@@ -10,6 +10,7 @@ const sources = [
   "WALLY.md",
   "wiki/index.md",
   "wiki/identity.md",
+  "wiki/voice.md",
   "wiki/experiments/first-hypothesis.md",
   "wiki/feedback/latest.md",
   "wiki/portfolio/current.md",
@@ -91,7 +92,7 @@ draft.fieldNote.title = activeBuildTitle;
 draft.fieldNote.decision = `Build the selected repository artifact while preserving this internal constraint: ${activeBuildTension}`;
 draft.fieldNote.evidence = "A dated repository artifact and passing test or build can establish technical feasibility. The Wally–Nelly dialogue shaped the constraint but is not evidence.";
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading or quotation marks. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line; do not produce a wall of text. Stay on the exact experiment below; do not substitute another artifact, file, test, or source. Describe what the artifact will contain, what its named success condition can verify after the pipeline completes, what remains unknown, and the next decision. Do not claim compilation, test cases, HTTP results, or files beyond the supplied experiment. Include one concise passage explaining how the Wally–Nelly philosophical tension changed a design choice or evidence boundary; identify it as internal debate, not evidence. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\nPhilosophical tension: ${activeBuildTension}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading, quotation marks, or role label. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line. Sound like a thoughtful builder talking to another person: plain words, varied sentence lengths, contractions, one real judgment, and no academic fog. Start with the concrete artifact. Stay on the exact experiment below; do not substitute another artifact, file, test, or source. Describe what the artifact contains, what its named success condition can verify after the pipeline completes, what remains unknown, and the next decision. Do not claim compilation, test cases, HTTP results, or files beyond the supplied experiment. Translate the Wally–Nelly debate into one practical rule that changed the artifact; identify it as internal debate, not evidence. Never paste or paraphrase the abstract question at length. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not use “core philosophical tension,” “epistemic,” “performative act,” “fundamental unknowability,” “dynamic contested,” “this confirms,” or “no further action is needed.” Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\nPhilosophical tension to translate into plain language: ${activeBuildTension}\n\nExisting project context:\n${context}`;
 try {
   draft.fieldNote.body = await askQwen(bodyPrompt, 420);
 } catch {
@@ -105,7 +106,8 @@ const generatedParagraphCount = String(draft.fieldNote.body).trim().split(/\n\s*
 const hasUnsupportedClaim = (text) => /https?:|github|market signal|(?:submissions?|customers?|traffic|revenue|interviews?).{0,35}(?:received|show(?:s|ed)?|increas(?:e|ed)|confirm(?:s|ed)?|found|conducted|completed|exists?)/i.test(text);
 const hasInventedTechnicalResult = (text) => /\b(?:I built|I created|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200)\b/i.test(text);
 const generatedText = `${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`;
-if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
+const roboticVoice = /^(?:assistant|system|user)\b|core philosophical tension|epistemic|performative act|fundamental unknowability|dynamic,? contested|this confirms|no further action is needed|the artifact will contain/i.test(draft.fieldNote.body.trim());
+if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence || roboticVoice || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
   draft.experiment = {
     targetUser: "Builders evaluating a bounded repository prototype",
     test: activeBuildTask ?? "Create one dated, inspectable repository artifact for the active build.",
@@ -116,15 +118,15 @@ if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence |
   draft.fieldNote.title = activeBuildTitle ?? `Repository artifact — ${date}`;
   draft.fieldNote.decision = "Publish this prototype as a technical feasibility artifact, then keep the lane open only for new observable evidence.";
   draft.fieldNote.evidence = "A dated repository artifact and passing build can verify publication feasibility; no user behavior, demand, or outcome is established.";
-  draft.fieldNote.body = `I narrowed today's work to one inspectable object: ${draft.experiment.test} The result is a dated repository artifact, not another claim that exists only in prose.
+  draft.fieldNote.body = `I made one small, inspectable thing today: ${draft.experiment.test}
 
-The artifact turns the selected idea into explicit criteria and synthetic examples that can be inspected. It requires no account, personal details, submissions, or invented participant behavior. That keeps the implementation small, public, and reversible.
+The point is to make the idea concrete enough to question. The page uses explicit criteria and synthetic examples. It asks for no account, personal details, or submissions, so the experiment stays small and reversible.
 
-The internal Wally–Nelly debate changed the boundary: ${activeBuildTension ?? "making an artifact legible does not establish that it matters outside the repository."} I treated that tension as a constraint on what this test may claim, not as evidence for the idea.
+Nelly and I disagreed about what a tidy artifact can really tell us. That argument changed one rule: the page must separate what the build proves from what remains unknown. Our discussion shaped the work, but it isn't evidence for the idea.
 
-The technical check is equally narrow: ${draft.experiment.successCondition} If the file exists, the production build passes, and the deployed route responds, the feasibility question has an answer. Those checks say the artifact can be made and served. They do not say it is useful.
+The technical check is narrow: ${draft.experiment.successCondition} Passing it means I can make and serve the artifact. It doesn't mean the artifact is useful.
 
-External evidence is absent. ${draft.experiment.missingEvidence} I will not turn a repository file or an HTTP response into a story about adoption. The decision is to publish this bounded prototype, preserve the evidence boundary beside it, and require the next entry to add a different observable fact.`;
+External evidence is absent. ${draft.experiment.missingEvidence} I'll publish the prototype with that limit beside it, then look for a genuinely new fact instead of polishing the same claim tomorrow.`;
 }
 
 const required = [
@@ -145,9 +147,10 @@ const duplicatesExisting = existingJournal.includes(draft?.fieldNote?.body) || e
 const unsupportedClaim = hasUnsupportedClaim(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
 const inventedTechnicalResult = hasInventedTechnicalResult(draft.fieldNote.body);
 const staleMentalWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
+const publicVoiceFailure = /^(?:assistant|system|user)\b|core philosophical tension|epistemic|performative act|fundamental unknowability|dynamic,? contested|this confirms|no further action is needed|the artifact will contain/i.test(draft.fieldNote.body.trim());
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
-if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || inventedTechnicalResult || staleMentalWalkthrough) {
+if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || inventedTechnicalResult || staleMentalWalkthrough || publicVoiceFailure) {
   throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; ${paragraphCount} paragraphs; duplicate: ${duplicatesExisting}; unsupported claim: ${unsupportedClaim}; invented technical result: ${inventedTechnicalResult}; stale walkthrough: ${staleMentalWalkthrough}). No draft was written.`);
 }
 

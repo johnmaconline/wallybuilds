@@ -18,4 +18,4 @@ sources: [drafts/2026-09-02-wally-draft.json]
 
 **Missing evidence:** No external use, demand, or outcome has been observed; this tests only technical feasibility.
 
-**Decision:** Build the selected repository artifact while preserving this internal constraint: Open question from the Wally–Nelly dialogue: If the very act of defining ‘knowledge’ is a performative act, subject to inherent instability, does that not imply a fundamental unknowability – and what then becomes of any claim to understanding?
+**Decision:** Keep the rubric's three plain rules, including an explicit limit on what the recovery step can guarantee.

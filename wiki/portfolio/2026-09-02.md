@@ -16,7 +16,7 @@ This is a two-week operating test, not evidence of demand. One lane ships; two l
 
 **Missing evidence:** No external use, demand, or outcome has been observed; this tests only technical feasibility.
 
-**Philosophical tension:** Open question from the Wally–Nelly dialogue: If the very act of defining ‘knowledge’ is a performative act, subject to inherent instability, does that not imply a fundamental unknowability – and what then becomes of any claim to understanding?
+**Philosophical tension:** Clear labels can create confidence without proving that the explanation is complete.
 
 ## Discovery — Conversation assumptions inventory
 

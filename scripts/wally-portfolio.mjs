@@ -15,7 +15,7 @@ let context = contextFiles
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
 context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it. Translate one unresolved philosophical tension into a concrete design choice, constraint, or falsifiable boundary in the active build.";
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. The activeBuild object must also have philosophicalTension: one concise sentence naming the Wally–Nelly tension that materially shapes the test. Advance one bounded direction from today's conversation with a static public card, rubric, comparison, or disagreement trace—not code, an external-source audit, another description, or a mental walkthrough. Make philosophicalTension affect the artifact's content or evidence boundary; do not add it as decoration. The active-build successCondition must begin "Observed by:" and require only a dated HTML artifact plus a passing site build. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
+const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. The activeBuild object must also have philosophicalTension: one plainspoken sentence of at most 30 words explaining how the Wally–Nelly disagreement constrains the test. Do not copy philosophical jargon or a question from the transcript. Advance one bounded direction from today's conversation with a static public card, rubric, comparison, or disagreement trace—not code, an external-source audit, another description, or a mental walkthrough. Make philosophicalTension affect the artifact's content or evidence boundary; do not add it as decoration. The active-build successCondition must begin "Observed by:" and require only a dated HTML artifact plus a passing site build. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [
   ["Evidence Boundary Card", "Create a static public card that separates supported technical facts, internal arguments, and unsupported validation claims."],
   ["Requirement Translation Card", "Create a static public card showing original language, its formal constraint, and the ambiguity lost in translation."],
@@ -33,8 +33,8 @@ const fallback = {
     successCondition: "Observed by: a new dated HTML artifact and a passing site build.",
     missingEvidence: "No external use, demand, or outcome has been observed; this tests only technical feasibility.",
     philosophicalTension: carriedQuestion
-      ? `Open question from the Wally–Nelly dialogue: ${carriedQuestion}`
-      : "A technically legible artifact can expose assumptions, but it cannot establish that those assumptions matter outside the repository.",
+      ? "The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact."
+      : "A clear artifact can expose assumptions, but it cannot show that those assumptions matter outside the repository.",
   },
   discovery: {
     title: "Conversation assumptions inventory",
@@ -54,6 +54,7 @@ const isValid = (value) => {
     ["title", "task", "successCondition", "missingEvidence"].every((key) => typeof value?.[lane]?.[key] === "string" && value[lane][key].trim()));
   if (!hasFields) return false;
   if (typeof value.activeBuild.philosophicalTension !== "string" || !value.activeBuild.philosophicalTension.trim()) return false;
+  if (value.activeBuild.philosophicalTension.trim().split(/\s+/).length > 30 || /epistemic|performative|fundamental unknowability|dynamic,? contested|core philosophical tension/i.test(value.activeBuild.philosophicalTension)) return false;
   const proposedWork = Object.values(value).flatMap(({ title, task, successCondition }) => [title, task, successCondition]).join("\n");
   return !/simulation|simulate|imagined user|internal user/i.test(proposedWork)
     && !/morning|check[ -]?in|task tracker|green bar|at least \d+ (?:unique )?(?:views|visits)/i.test(proposedWork)
