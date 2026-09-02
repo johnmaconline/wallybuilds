@@ -15,11 +15,11 @@ let context = contextFiles
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`).join("\n\n");
 context += "\n\nThe Wally–Nelly conversation is internal reasoning, not external evidence. Give useful disagreement real weight, but do not select an idea merely because either agent preferred it. Translate one unresolved philosophical tension into a concrete design choice, constraint, or falsifiable boundary in the active build.";
 const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
-const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. The activeBuild object must also have philosophicalTension: one concise sentence naming the Wally–Nelly tension that materially shapes the test. Advance one bounded direction from today's conversation with a new repository artifact or executable check—not another description or mental walkthrough. Make philosophicalTension affect the task, success condition, or evidence boundary; do not add it as decoration. The active-build successCondition must begin "Observed by:" and name a repository file or test/build result that can be checked today. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
+const prompt = `You are Wally's portfolio manager. Use only this context. Return JSON only with exactly three objects: activeBuild, discovery, distribution. Each object must have title, task, successCondition, and missingEvidence. The activeBuild object must also have philosophicalTension: one concise sentence naming the Wally–Nelly tension that materially shapes the test. Advance one bounded direction from today's conversation with a static public card, rubric, comparison, or disagreement trace—not code, an external-source audit, another description, or a mental walkthrough. Make philosophicalTension affect the artifact's content or evidence boundary; do not add it as decoration. The active-build successCondition must begin "Observed by:" and require only a dated HTML artifact plus a passing site build. Never assume an external source, directory, file, user, event, or result exists unless the context verifies it. Never propose simulations, imagined users, fabricated screens, or UI features not already present. Discovery must produce a repository-only brief, not claimed research. Distribution must publish the resulting public artifact and observe only existing anonymous page-view stats, without a made-up traffic target; do not claim it happened or propose DMs, follows, replies, purchases, or contacting people.\n\n${context}`;
 const fallbackVariants = [
-  ["Evidence Claim Linter", "Create a repository script and synthetic fixtures that distinguish supported technical facts from unsupported validation claims."],
-  ["Requirement-to-Test Fixture", "Create a small requirement fixture, translate it into explicit assertions, and run a repository test against the result."],
-  ["Documentation Drift Fixture", "Create paired documentation and implementation fixtures plus a script that reports a deliberate mismatch."],
+  ["Evidence Boundary Card", "Create a static public card that separates supported technical facts, internal arguments, and unsupported validation claims."],
+  ["Requirement Translation Card", "Create a static public card showing original language, its formal constraint, and the ambiguity lost in translation."],
+  ["Documentation Drift Comparison", "Create a static public comparison of claimed behavior, observable repository behavior, and the unresolved difference."],
   ["Failure Message Clarity Rubric", "Create a static rubric and synthetic error-message fixtures, then test that each fixture exposes cause, impact, and recovery."],
   ["Agent Disagreement Trace", "Create a dated artifact mapping Wally and Nelly's assumptions to checks that could resolve each disagreement."],
 ];
@@ -30,7 +30,7 @@ const fallback = {
   activeBuild: {
     title: uniqueFallbackTitle,
     task: fallbackTask,
-    successCondition: "Observed by: a new dated repository artifact and a passing automated test or site build.",
+    successCondition: "Observed by: a new dated HTML artifact and a passing site build.",
     missingEvidence: "No external use, demand, or outcome has been observed; this tests only technical feasibility.",
     philosophicalTension: carriedQuestion
       ? `Open question from the Wally–Nelly dialogue: ${carriedQuestion}`
@@ -57,6 +57,8 @@ const isValid = (value) => {
   const proposedWork = Object.values(value).flatMap(({ title, task, successCondition }) => [title, task, successCondition]).join("\n");
   return !/simulation|simulate|imagined user|internal user/i.test(proposedWork)
     && !/morning|check[ -]?in|task tracker|green bar|at least \d+ (?:unique )?(?:views|visits)/i.test(proposedWork)
+    && !/github|open-source|publicly available|\.tsx?\b|\.jsx?\b|compile|source code|external (?:source|repository)|at least (?:one|\d+) (?:unique )?(?:visitor|visitors|view|views|visit|visits)/i.test(proposedWork)
+    && /card|rubric|comparison|trace|static (?:public )?artifact|html artifact/i.test(`${value.activeBuild.title} ${value.activeBuild.task}`)
     && /^Observed by:/i.test(value.activeBuild.successCondition)
     && /repository|file|build|test|http|event|route|page/i.test(value.activeBuild.successCondition)
     && !journal.includes(`title: ${JSON.stringify(value.activeBuild.title)}`);

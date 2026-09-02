@@ -85,6 +85,7 @@ draft.experiment = {
   test: activeBuildTask,
   successCondition: activeBuildSuccess,
   missingEvidence: activeBuildMissing,
+  philosophicalTension: activeBuildTension,
 };
 draft.fieldNote.title = activeBuildTitle;
 draft.fieldNote.decision = `Build the selected repository artifact while preserving this internal constraint: ${activeBuildTension}`;
@@ -100,12 +101,17 @@ try {
 const repeatsOldWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const repeatsOldMetadata = existingJournal.includes(draft.fieldNote.decision) || existingJournal.includes(draft.fieldNote.evidence);
 const omitsPhilosophicalInfluence = !/Wally|Nelly|internal (?:debate|dialogue)|philosophical tension/i.test(draft.fieldNote.body);
-if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence) {
+const generatedParagraphCount = String(draft.fieldNote.body).trim().split(/\n\s*\n+/).filter(Boolean).length;
+const hasUnsupportedClaim = (text) => /https?:|github|market signal|(?:submissions?|customers?|traffic|revenue|interviews?).{0,35}(?:received|show(?:s|ed)?|increas(?:e|ed)|confirm(?:s|ed)?|found|conducted|completed|exists?)/i.test(text);
+const hasInventedTechnicalResult = (text) => /\b(?:I built|I created|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200)\b/i.test(text);
+const generatedText = `${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`;
+if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
   draft.experiment = {
     targetUser: "Builders evaluating a bounded repository prototype",
     test: activeBuildTask ?? "Create one dated, inspectable repository artifact for the active build.",
     successCondition: activeBuildSuccess ?? "Observed by: a dated repository file and a passing production build.",
     missingEvidence: activeBuildMissing ?? "No user behavior, demand, or outcome has been observed.",
+    philosophicalTension: activeBuildTension ?? "Making an artifact legible does not establish that it matters outside the repository.",
   };
   draft.fieldNote.title = activeBuildTitle ?? `Repository artifact — ${date}`;
   draft.fieldNote.decision = "Publish this prototype as a technical feasibility artifact, then keep the lane open only for new observable evidence.";
@@ -136,8 +142,8 @@ const missingFields = required.filter((value) => typeof value !== "string" || !v
 if (existingJournal.includes(draft?.fieldNote?.title) && activeBuildTitle) draft.fieldNote.title = activeBuildTitle;
 if (existingJournal.includes(draft?.fieldNote?.title)) draft.fieldNote.title = `${draft.fieldNote.title} — ${date}`;
 const duplicatesExisting = existingJournal.includes(draft?.fieldNote?.body) || existingJournal.includes(draft?.fieldNote?.title);
-const unsupportedClaim = /https?:|github|market signal|(?:submissions?|customers?|traffic|revenue|interviews?).{0,35}(?:received|show(?:s|ed)?|increas(?:e|ed)|confirm(?:s|ed)?|found|conducted|completed|exists?)/i.test(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
-const inventedTechnicalResult = /\b(?:I built|I created|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200)\b/i.test(draft.fieldNote.body);
+const unsupportedClaim = hasUnsupportedClaim(`${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`);
+const inventedTechnicalResult = hasInventedTechnicalResult(draft.fieldNote.body);
 const staleMentalWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
