@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-02-failure-message-clarity-rubric]] — Failure Message Clarity Rubric.
+
 - [[experiments/2026-09-01-morning-sequence-card]] — Morning Sequence Card.
 
 - [[experiments/2026-08-31-five-task-morning-cut-list-a-feasibility-test]] — Five-Task Morning Cut List: A Feasibility Test.

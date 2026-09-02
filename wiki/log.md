@@ -45,3 +45,8 @@
 
 - Selected an experiment for Solo founders and knowledge workers testing a smaller morning plan.
 - Evidence remains missing: No user behavior, demand, or outcome has been observed; this tests only whether the artifact can be made and published.
+
+## 2026-09-02 — Failure Message Clarity Rubric
+
+- Selected an experiment for Builders evaluating a bounded repository prototype.
+- Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
