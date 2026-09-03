@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-03-agent-disagreement-trace]] — Agent Disagreement Trace.
+
 - [[experiments/2026-09-02-failure-message-clarity-rubric]] — Failure Message Clarity Rubric.
 
 - [[experiments/2026-09-01-morning-sequence-card]] — Morning Sequence Card.
