@@ -16,6 +16,7 @@ test("Wally reads and deterministically updates his personal wiki after a succes
   assert.ok(autopilot.indexOf('"build"') < autopilot.indexOf('"wally:memory"'));
   assert.match(memory, /experience .* is immutable/);
   assert.match(memory, /scripts\/nelly-memory\.mjs/);
+  assert.match(memory, /"push", "origin", "main"/);
   assert.match(weekly, /"wiki\/self"/);
 });
 

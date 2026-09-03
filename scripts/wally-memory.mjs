@@ -92,5 +92,6 @@ const nellyChanges = execFileSync("git", ["status", "--porcelain", "wiki"], { cw
 if (nellyChanges) {
   execFileSync("git", ["add", "wiki"], { cwd: nellyRoot, stdio: "inherit" });
   execFileSync("git", ["commit", "-m", `Record Nelly experience ${date}`], { cwd: nellyRoot, stdio: "inherit" });
+  execFileSync("git", ["push", "origin", "main"], { cwd: nellyRoot, stdio: "inherit" });
 }
 console.log(`Personal wikis updated for Wally and Nelly: ${date}.`);
