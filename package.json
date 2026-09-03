@@ -16,6 +16,7 @@
     "wally:feedback": "node scripts/wally-feedback.mjs",
     "wally:research": "node scripts/wally-hermes.mjs",
     "wally:conversation": "node scripts/wally-nelly.mjs",
+    "wally:memory": "node scripts/wally-memory.mjs",
     "wally:portfolio": "node scripts/wally-portfolio.mjs",
     "wally:bluesky": "node scripts/wally-bluesky.mjs",
     "wally:apply": "node scripts/wally-apply.mjs",

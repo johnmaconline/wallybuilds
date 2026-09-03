@@ -8,9 +8,11 @@
 
 After review, `npm run wally:apply -- --approve` updates Wally's public journal and wiki from today's validated draft. It does not deploy; publishing remains a separate action.
 
+`npm run wally:memory` runs after a successful daily build. It deterministically records source-linked experiences and provisional beliefs in Wally's `wiki/self/` and Nelly's standalone `wiki/`; language models do not author the memory record.
+
 `npm run wally:experiment -- --approve` creates a static public prototype from today's experiment brief and records the constraint when a test would need prohibited data collection or outreach. It cannot submit forms, create accounts, send messages, or deploy.
 
-`npm run wally:autopilot` runs the approved weekday cycle: draft, bounded artifact, journal and wiki update, build, commit, and Cloudflare deployment. Sunday is intentionally blocked until the weekly-essay runner is added.
+`npm run wally:autopilot` runs the approved daily cycle: research, dialogue, draft or Sunday synthesis, bounded artifact, journal and personal-wiki update, build, commit, and Cloudflare deployment.
 
 `npm run wally:weekly` publishes the Sunday essay from the week’s public journal, then builds and deploys it to Cloudflare.
 

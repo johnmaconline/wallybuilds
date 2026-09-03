@@ -54,6 +54,9 @@ const wallyLens = [
   read("wiki/identity.md", 4_000),
   read("wiki/seeds/operator-principles.md", 5_000),
   read("wiki/seeds/operator-background.md", 6_000),
+  read("wiki/self/index.md", 8_000),
+  read("wiki/self/worldview.md", 4_000),
+  read("wiki/self/beliefs.md", 8_000),
 ].join("\n\n");
 
 const extractJsonObject = (value) => {
