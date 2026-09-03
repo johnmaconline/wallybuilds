@@ -22,7 +22,10 @@ test("names Nelly only when her discussion materially reaches the selected work"
 
 test("daily dialogue carries bounded recorded agent experience", () => {
   const runner = readFileSync(resolve(import.meta.dirname, "../scripts/wally-nelly.mjs"), "utf8");
-  assert.match(runner, /sort\(\)\.slice\(-2\)/);
+  assert.match(runner, /readdirSync\(conversationDir\).*\.sort\(\)\n  : \[\];/);
+  assert.match(runner, /COMPLETE EPISODIC TIMELINE/);
+  assert.match(runner, /priorConversationFiles\.map\(episode\)/);
+  assert.match(runner, /recentDetailedHistory = priorConversationFiles\.slice\(-2\)/);
   assert.match(runner, /shared_agent_history: evidence\.sharedAgentHistory/g);
   assert.match(runner, /## Shared experience consulted/);
   assert.match(runner, /Never invent a memory, relationship, body, childhood/);

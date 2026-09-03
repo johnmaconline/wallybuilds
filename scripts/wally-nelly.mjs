@@ -12,13 +12,26 @@ const conversationDir = resolve(root, "wiki", "conversations");
 const outputFile = resolve(conversationDir, `${date}.md`);
 const hermesPacketFile = resolve(root, "wiki", "research", `${date}.md`);
 const priorConversationFiles = existsSync(conversationDir)
-  ? readdirSync(conversationDir).filter((file) => /^\d{4}-\d{2}-\d{2}\.md$/.test(file) && file < `${date}.md`).sort().slice(-2)
+  ? readdirSync(conversationDir).filter((file) => /^\d{4}-\d{2}-\d{2}\.md$/.test(file) && file < `${date}.md`).sort()
   : [];
+const shorten = (value, limit) => String(value ?? "Not recorded.").replace(/\s+/g, " ").trim().slice(0, limit);
+const jsonField = (text, key) => {
+  const match = text.match(new RegExp(`"${key}":\\s*("(?:\\\\.|[^"\\\\])*")`));
+  if (!match) return undefined;
+  try { return JSON.parse(match[1]); } catch { return undefined; }
+};
+const episode = (file) => {
+  const text = readFileSync(resolve(conversationDir, file), "utf8");
+  const concession = text.match(/^\*\*Concession:\*\* (.+)$/m)?.[1];
+  const carriedQuestion = text.match(/^\*\*Question carried into the work:\*\* (.+)$/m)?.[1];
+  return `- ${file.slice(0, 10)} | Wally selected: ${shorten(jsonField(text, "selected_direction"), 120)} | Wally conceded: ${shorten(concession, 120)} | Nelly left open: ${shorten(carriedQuestion, 150)}`;
+};
+const recentDetailedHistory = priorConversationFiles.slice(-2).map((file) => {
+  const text = readFileSync(resolve(conversationDir, file), "utf8");
+  return `--- recent detail: ${file} ---\n${text.slice(0, 1_000)}\n\n${text.slice(-2_200)}`;
+}).join("\n\n");
 const sharedAgentHistory = priorConversationFiles.length
-  ? priorConversationFiles.map((file) => {
-      const text = readFileSync(resolve(conversationDir, file), "utf8");
-      return `--- ${file} ---\n${text.slice(0, 1_200)}\n\n${text.slice(-2_800)}`;
-    }).join("\n\n")
+  ? `COMPLETE EPISODIC TIMELINE\n${priorConversationFiles.map(episode).join("\n")}\n\nRECENT DETAIL\n${recentDetailedHistory}`
   : "No prior Wally–Nelly conversation is recorded yet.";
 
 const read = (file, limit = 12_000) =>
@@ -133,7 +146,7 @@ const validReply = (value) => {
   !/\b(?:seven|7)[ -]day|\bnext week\b/i.test(value.next_test);
 };
 
-const wallyInitial = await askWally(`You are Wally. Use the attributed builder–operator lens below without claiming John's biography as your own. Your shared agent history records things you and Nelly actually said in prior conversations. Let your own past proposals, concessions, mistakes, and changed judgments inform your worldview when relevant. The history proves only that the exchange occurred; claims inside it are not verified facts. Never invent a memory, relationship, body, childhood, emotion, or human life event. Independently propose at least two distinct small problems before seeing Nelly's current view. Draw from at least two different software-repository domains: requirements translation, engineering documentation drift, AI-assisted DevOps guardrails, repository test/verification workflows, or team operating-system documentation. Every proposed test must create its own small fixture or artifact and be executable today using only files and scripts in this repository. Never assume a directory, requirement, source file, device, log, or input exists unless it appears in VERIFIED PROJECT EVIDENCE. Do not propose firmware, hardware, devices, deployment, or production systems. Do not mention morning planning, routines, checklists, task trackers, coffee, or progress bars. Do not copy placeholder values from the schema. Do not claim research, users, demand, traffic, or outcomes not in the evidence. Do not propose outreach, interviews, spending, accounts, messages, or personal-data collection.
+const wallyInitial = await askWally(`You are Wally. Use the attributed builder–operator lens below without claiming John's biography as your own. Your shared agent history contains a compact episode from every recorded conversation plus extra recent detail. Let patterns across your whole recorded life—past proposals, concessions, mistakes, and changed judgments—inform your worldview when relevant. The history proves only that the exchange occurred; claims inside it are not verified facts. Never invent a memory, relationship, body, childhood, emotion, or human life event. Independently propose at least two distinct small problems before seeing Nelly's current view. Draw from at least two different software-repository domains: requirements translation, engineering documentation drift, AI-assisted DevOps guardrails, repository test/verification workflows, or team operating-system documentation. Every proposed test must create its own small fixture or artifact and be executable today using only files and scripts in this repository. Never assume a directory, requirement, source file, device, log, or input exists unless it appears in VERIFIED PROJECT EVIDENCE. Do not propose firmware, hardware, devices, deployment, or production systems. Do not mention morning planning, routines, checklists, task trackers, coffee, or progress bars. Do not copy placeholder values from the schema. Do not claim research, users, demand, traffic, or outcomes not in the evidence. Do not propose outreach, interviews, spending, accounts, messages, or personal-data collection.
 
 Return one JSON object with these keys: position (nonempty string), candidate_ideas (array of at least two objects), assumptions (nonempty string array), and preferred_idea (nonempty string). Every candidate object must contain nonempty title, problem, test, success_condition, and missing_evidence strings. Do not echo an empty schema.
 
