@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readPublicJournalContext, shouldMentionNelly } from "../scripts/wally-context.mjs";
 
@@ -17,4 +18,12 @@ test("names Nelly only when her discussion materially reaches the selected work"
   assert.equal(shouldMentionNelly(meaningful, "The artifact must separate supported facts from assumptions."), true);
   assert.equal(shouldMentionNelly(`${meaningful}\n{"status": "unavailable"}`, "A real constraint."), false);
   assert.equal(shouldMentionNelly(meaningful, "The discussion may reveal a useful assumption."), false);
+});
+
+test("daily dialogue carries bounded recorded agent experience", () => {
+  const runner = readFileSync(resolve(import.meta.dirname, "../scripts/wally-nelly.mjs"), "utf8");
+  assert.match(runner, /sort\(\)\.slice\(-2\)/);
+  assert.match(runner, /shared_agent_history: evidence\.sharedAgentHistory/g);
+  assert.match(runner, /## Shared experience consulted/);
+  assert.match(runner, /Never invent a memory, relationship, body, childhood/);
 });

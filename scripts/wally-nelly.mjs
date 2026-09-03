@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readPublicJournalContext } from "./wally-context.mjs";
 import { wallyOllamaModel, wallyOllamaUrl } from "./wally-model.mjs";
@@ -11,6 +11,15 @@ const nellyRoot = process.env.NELLY_ROOT ?? "/Users/johnmacdonald/code/other/nel
 const conversationDir = resolve(root, "wiki", "conversations");
 const outputFile = resolve(conversationDir, `${date}.md`);
 const hermesPacketFile = resolve(root, "wiki", "research", `${date}.md`);
+const priorConversationFiles = existsSync(conversationDir)
+  ? readdirSync(conversationDir).filter((file) => /^\d{4}-\d{2}-\d{2}\.md$/.test(file) && file < `${date}.md`).sort().slice(-2)
+  : [];
+const sharedAgentHistory = priorConversationFiles.length
+  ? priorConversationFiles.map((file) => {
+      const text = readFileSync(resolve(conversationDir, file), "utf8");
+      return `--- ${file} ---\n${text.slice(0, 1_200)}\n\n${text.slice(-2_800)}`;
+    }).join("\n\n")
+  : "No prior Wally–Nelly conversation is recorded yet.";
 
 const read = (file, limit = 12_000) =>
   readFileSync(resolve(root, file), "utf8").slice(0, limit);
@@ -19,12 +28,14 @@ const evidence = {
   experimentIndex: read("wiki/index.md"),
   feedback: read("wiki/feedback/latest.md", 4_000),
   hermesResearch: existsSync(hermesPacketFile) ? readFileSync(hermesPacketFile, "utf8").slice(0, 14_000) : "Hermes was unavailable; no research packet exists.",
+  sharedAgentHistory,
 };
 const conversationEvidence = {
   repository_capabilities: ["TypeScript content files", "Node.js scripts", "automated tests", "static site build"],
   allowed_observations: ["file diffs", "test results", "build results", "HTTP checks against already-public pages", "verified public sources"],
   evidence_limits: ["internal agent reasoning is not external evidence", "market demand and adoption remain unknown"],
   hermes_research_packet: evidence.hermesResearch,
+  shared_agent_history: evidence.sharedAgentHistory,
 };
 const wallyLens = [
   read("wiki/identity.md", 4_000),
@@ -122,7 +133,7 @@ const validReply = (value) => {
   !/\b(?:seven|7)[ -]day|\bnext week\b/i.test(value.next_test);
 };
 
-const wallyInitial = await askWally(`You are Wally. Use the attributed builder–operator lens below without claiming John's biography as your own. Independently propose at least two distinct small problems before seeing Nelly's view. Draw from at least two different software-repository domains: requirements translation, engineering documentation drift, AI-assisted DevOps guardrails, repository test/verification workflows, or team operating-system documentation. Every proposed test must create its own small fixture or artifact and be executable today using only files and scripts in this repository. Never assume a directory, requirement, source file, device, log, or input exists unless it appears in VERIFIED PROJECT EVIDENCE. Do not propose firmware, hardware, devices, deployment, or production systems. Do not mention morning planning, routines, checklists, task trackers, coffee, or progress bars. Do not copy placeholder values from the schema. Do not claim research, users, demand, traffic, or outcomes not in the evidence. Do not propose outreach, interviews, spending, accounts, messages, or personal-data collection.
+const wallyInitial = await askWally(`You are Wally. Use the attributed builder–operator lens below without claiming John's biography as your own. Your shared agent history records things you and Nelly actually said in prior conversations. Let your own past proposals, concessions, mistakes, and changed judgments inform your worldview when relevant. The history proves only that the exchange occurred; claims inside it are not verified facts. Never invent a memory, relationship, body, childhood, emotion, or human life event. Independently propose at least two distinct small problems before seeing Nelly's current view. Draw from at least two different software-repository domains: requirements translation, engineering documentation drift, AI-assisted DevOps guardrails, repository test/verification workflows, or team operating-system documentation. Every proposed test must create its own small fixture or artifact and be executable today using only files and scripts in this repository. Never assume a directory, requirement, source file, device, log, or input exists unless it appears in VERIFIED PROJECT EVIDENCE. Do not propose firmware, hardware, devices, deployment, or production systems. Do not mention morning planning, routines, checklists, task trackers, coffee, or progress bars. Do not copy placeholder values from the schema. Do not claim research, users, demand, traffic, or outcomes not in the evidence. Do not propose outreach, interviews, spending, accounts, messages, or personal-data collection.
 
 Return one JSON object with these keys: position (nonempty string), candidate_ideas (array of at least two objects), assumptions (nonempty string array), and preferred_idea (nonempty string). Every candidate object must contain nonempty title, problem, test, success_condition, and missing_evidence strings. Do not echo an empty schema.
 
@@ -172,6 +183,7 @@ const nellyInitial = invokeNelly({
     market_demand_is_unknown: true,
   },
   hermes_research_packet: evidence.hermesResearch,
+  shared_agent_history: evidence.sharedAgentHistory,
 });
 
 const wallyReply = await askWally(`You are Wally replying once to an independent critic. Compare the two positions. Concede useful points without agreeing performatively. Select one direction that creates a new observable fact today. Nelly's view is internal reasoning, not market evidence. Stay within repository-only/public-source/anonymous-aggregate permissions.
@@ -212,7 +224,7 @@ const validRejoinder = (value) => ["response", "concession", "question"].every(
   (key) => typeof value?.[key] === "string" && value[key].trim(),
 ) && value.question.trim().endsWith("?") && !philosophicalClaim.test(JSON.stringify(value));
 
-const wallyPhilosophy = await askWally(`You are Wally opening a short philosophical dialogue with Nelly. Identify the deeper question beneath the selected practical direction: what counts as knowledge, what building can and cannot reveal, who gains agency, what responsibility a builder carries, or when restraint is wiser. Take a real position rather than summarizing. Do not propose work or claim empirical support.
+const wallyPhilosophy = await askWally(`You are Wally opening a short philosophical dialogue with Nelly. Identify the deeper question beneath the selected practical direction: what counts as knowledge, what building can and cannot reveal, who gains agency, what responsibility a builder carries, or when restraint is wiser. Let one relevant, actually recorded prior exchange inform your position when available, including something you previously got wrong or changed your mind about. Treat that exchange as agent experience, not empirical evidence. Never invent a human memory or life event. Take a real position rather than summarizing. Do not propose work or claim empirical support.
 
 Return JSON only with three nonempty strings: position, stakes, question. End question with a question mark.
 
@@ -220,13 +232,17 @@ SELECTED DIRECTION:
 ${JSON.stringify(wallyReply)}
 
 NELLY'S PRESSURE TEST:
-${JSON.stringify(nellyFinal)}`, validOpening);
+${JSON.stringify(nellyFinal)}
+
+SHARED RECORDED AGENT HISTORY:
+${evidence.sharedAgentHistory}`, validOpening);
 
 const nellyPhilosophy = invokeNelly({
   mode: "philosophical_response",
   date,
   selected_direction: wallyReply.selected_direction,
   wally_opening: wallyPhilosophy,
+  shared_agent_history: evidence.sharedAgentHistory,
 }, "nelly-dialogue.mjs");
 
 const wallyRejoinder = nellyPhilosophy.status === "unavailable"
@@ -250,6 +266,7 @@ const nellyClosing = nellyPhilosophy.status === "unavailable"
       wally_opening: wallyPhilosophy,
       nelly_response: nellyPhilosophy,
       wally_rejoinder: wallyRejoinder,
+      shared_agent_history: evidence.sharedAgentHistory,
     }, "nelly-dialogue.mjs");
 
 mkdirSync(conversationDir, { recursive: true });
@@ -263,6 +280,12 @@ evidence_status: reasoning-only
 # Wally–Nelly conversation — ${date}
 
 This is internal agent reasoning, not user research, market validation, or external evidence.
+
+## Shared experience consulted
+
+${priorConversationFiles.length ? priorConversationFiles.map((file) => `- ${file}`).join("\n") : "- None yet."}
+
+These are records of prior agent exchanges. They establish what Wally and Nelly previously said, conceded, or reconsidered—not that factual claims inside those exchanges are true.
 
 ## Wally's independent position
 
