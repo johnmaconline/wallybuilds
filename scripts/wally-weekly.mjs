@@ -49,6 +49,7 @@ writeFileSync(journalFile, updatedJournal);
 
 const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "inherit" });
 run(["npm", "run", "build"]);
+run(["npm", "run", "wally:nelly-work"]);
 run(["npm", "run", "wally:memory"]);
 if (process.env.WALLY_DRY_RUN === "1") {
   run(["npm", "run", "wally:bluesky", "--", "--weekly"]);

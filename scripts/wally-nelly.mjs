@@ -11,6 +11,7 @@ const nellyRoot = process.env.NELLY_ROOT ?? "/Users/johnmacdonald/code/other/nel
 const conversationDir = resolve(root, "wiki", "conversations");
 const outputFile = resolve(conversationDir, `${date}.md`);
 const hermesPacketFile = resolve(root, "wiki", "research", `${date}.md`);
+const nellyAtlasIndex = resolve(nellyRoot, "work", "boundary-atlas", "index.md");
 const priorConversationFiles = existsSync(conversationDir)
   ? readdirSync(conversationDir).filter((file) => /^\d{4}-\d{2}-\d{2}\.md$/.test(file) && file < `${date}.md`).sort()
   : [];
@@ -41,6 +42,7 @@ const evidence = {
   experimentIndex: read("wiki/index.md"),
   feedback: read("wiki/feedback/latest.md", 4_000),
   hermesResearch: existsSync(hermesPacketFile) ? readFileSync(hermesPacketFile, "utf8").slice(0, 14_000) : "Hermes was unavailable; no research packet exists.",
+  nellyIndependentWork: existsSync(nellyAtlasIndex) ? readFileSync(nellyAtlasIndex, "utf8").slice(0, 12_000) : "Nelly has no independent work recorded yet.",
   sharedAgentHistory,
 };
 const conversationEvidence = {
@@ -49,6 +51,7 @@ const conversationEvidence = {
   evidence_limits: ["internal agent reasoning is not external evidence", "market demand and adoption remain unknown"],
   hermes_research_packet: evidence.hermesResearch,
   shared_agent_history: evidence.sharedAgentHistory,
+  nelly_boundary_atlas: evidence.nellyIndependentWork,
 };
 const wallyLens = [
   read("wiki/identity.md", 4_000),
@@ -155,6 +158,9 @@ Return one JSON object with these keys: position (nonempty string), candidate_id
 
 WALLY LENS:
 ${wallyLens}
+
+NELLY'S PRIOR INDEPENDENT WORK (reasoning, not external evidence):
+${evidence.nellyIndependentWork}
 
 VERIFIED PROJECT EVIDENCE:
 ${JSON.stringify(conversationEvidence)}`, validInitial);

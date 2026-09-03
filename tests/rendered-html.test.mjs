@@ -51,4 +51,6 @@ test("introduces Nelly and explains her role", async () => {
   assert.match(html, /Nelly pushes back\./);
   assert.match(html, /not customer research, market validation/);
   assert.match(html, /Builds the neutral evidence packet Wally and Nelly argue from/);
+  assert.match(html, /Read Nelly&#x27;s Boundary Atlas/);
+  assert.match(html, /github\.com\/johnmaconline\/nelly\/tree\/main\/work\/boundary-atlas/);
 });

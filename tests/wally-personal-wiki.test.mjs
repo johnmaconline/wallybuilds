@@ -14,10 +14,21 @@ test("Wally reads and deterministically updates his personal wiki after a succes
   assert.match(conversation, /read\("wiki\/self\/worldview\.md"/);
   assert.match(conversation, /read\("wiki\/self\/beliefs\.md"/);
   assert.ok(autopilot.indexOf('"build"') < autopilot.indexOf('"wally:memory"'));
+  assert.ok(autopilot.indexOf('"build"') < autopilot.indexOf('"wally:nelly-work"'));
+  assert.ok(autopilot.indexOf('"wally:nelly-work"') < autopilot.indexOf('"wally:memory"'));
   assert.match(memory, /experience .* is immutable/);
   assert.match(memory, /scripts\/nelly-memory\.mjs/);
   assert.match(memory, /"push", "origin", "main"/);
   assert.match(weekly, /"wiki\/self"/);
+});
+
+test("Nelly's independent work uses the built artifact and informs later conversations", () => {
+  const work = read("scripts/wally-nelly-work.mjs");
+  const conversation = read("scripts/wally-nelly.mjs");
+  assert.match(work, /public\/experiments/);
+  assert.match(work, /artifact_text/);
+  assert.match(work, /"push", "origin", "main"/);
+  assert.match(conversation, /nelly_boundary_atlas/);
 });
 
 test("Wally's backfilled experience is source-linked and evidence bounded", () => {

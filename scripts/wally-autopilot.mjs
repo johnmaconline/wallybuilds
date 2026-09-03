@@ -43,6 +43,7 @@ runWithRetry(["npm", "run", "wally:draft"]);
 run(["npm", "run", "wally:experiment", "--", "--approve"]);
 run(["npm", "run", "wally:apply", "--", "--approve"]);
 run(["npm", "run", "build"]);
+runWithRetry(["npm", "run", "wally:nelly-work"], 2);
 run(["npm", "run", "wally:memory"]);
 
 const changed = execFileSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" }).trim();

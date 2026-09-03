@@ -13,6 +13,7 @@ const readOptional = (path) => existsSync(path) ? readFileSync(path, "utf8") : "
 const conversation = readFileSync(conversationPath, "utf8");
 const portfolio = readOptional(resolve(root, "wiki/portfolio", `${date}.md`));
 const draftText = readOptional(resolve(root, "drafts", `${date}-wally-draft.json`));
+const nellyAtlasCase = readOptional(resolve(nellyRoot, "work/boundary-atlas", `${date}.md`));
 let draft = {};
 try { draft = draftText ? JSON.parse(draftText) : {}; } catch {}
 
@@ -81,7 +82,7 @@ appendOnce(resolve(selfRoot, "log.md"), `## ${date} — experience recorded`, `\
 
 const nellyResult = spawnSync(process.execPath, [resolve(nellyRoot, "scripts/nelly-memory.mjs")], {
   cwd: nellyRoot,
-  input: JSON.stringify({ date, conversation, portfolio, draft }),
+  input: JSON.stringify({ date, conversation, portfolio, draft, atlasCase: nellyAtlasCase }),
   encoding: "utf8",
   timeout: 30_000,
   maxBuffer: 2_000_000,
