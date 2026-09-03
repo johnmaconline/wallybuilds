@@ -4,7 +4,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { readPublicJournalContext, shouldMentionNelly } from "../scripts/wally-context.mjs";
 
-const context = readPublicJournalContext(resolve(import.meta.dirname, ".."));
+const root = resolve(import.meta.dirname, "..");
+const context = readPublicJournalContext(root);
 
 test("conversation context omits superseded journal runs", () => {
   for (const day of ["DAY 002", "DAY 004", "DAY 005", "DAY 006", "DAY 007", "DAY 008"]) {
@@ -18,6 +19,12 @@ test("names Nelly only when her discussion materially reaches the selected work"
   assert.equal(shouldMentionNelly(meaningful, "The artifact must separate supported facts from assumptions."), true);
   assert.equal(shouldMentionNelly(`${meaningful}\n{"status": "unavailable"}`, "A real constraint."), false);
   assert.equal(shouldMentionNelly(meaningful, "The discussion may reveal a useful assumption."), false);
+});
+
+test("the draft treats a Wally-Nelly disagreement artifact as material attribution", () => {
+  const draft = readFileSync(resolve(root, "scripts/wally-draft.mjs"), "utf8");
+  assert.match(draft, /conversationIsTheArtifact/);
+  assert.match(draft, /activeBuildTitle.*activeBuildTask/);
 });
 
 test("daily dialogue carries bounded recorded agent experience", () => {

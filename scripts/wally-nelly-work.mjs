@@ -17,8 +17,9 @@ if (existsSync(draftPath)) {
   if (!artifact.trim()) throw new Error(`Verified artifact ${artifactPath} is empty.`);
   source = {
     title: draft?.fieldNote?.title, path: `wallybuilds:${artifactPath}`,
-    decision: draft?.fieldNote?.decision, evidence: draft?.fieldNote?.evidence,
-    artifact_bytes: Buffer.byteLength(artifact), artifact_text: artifact.slice(0, 20_000),
+    decision: draft?.fieldNote?.decision,
+    evidence: `The orchestrated site build passed. ${draft?.fieldNote?.evidence}`,
+    artifact_text: artifact.slice(0, 20_000),
   };
 } else {
   const journal = readFileSync(resolve(root, "content/journal.ts"), "utf8");
@@ -30,8 +31,8 @@ if (existsSync(draftPath)) {
   const field = (key) => { const match = entry.match(new RegExp(`${key}:\\s*("(?:\\\\.|[^"\\\\])*")`)); return match ? JSON.parse(match[1]) : undefined; };
   source = {
     title: field("title"), path: "wallybuilds:content/journal.ts",
-    decision: field("decision"), evidence: field("evidence"),
-    artifact_bytes: Buffer.byteLength(entry), artifact_text: entry,
+    decision: field("decision"), evidence: `The orchestrated site build passed. ${field("evidence")}`,
+    artifact_text: entry,
   };
 }
 

@@ -28,7 +28,8 @@ const activeBuildSuccess = currentPortfolio.match(/^\*\*Success condition:\*\* (
 const activeBuildMissing = currentPortfolio.match(/^\*\*Missing evidence:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildTension = currentPortfolio.match(/^\*\*Philosophical tension:\*\* (.+)$/m)?.[1]?.trim();
 const conversationText = existsSync(resolve(root, conversation)) ? readFileSync(resolve(root, conversation), "utf8") : "";
-const mentionNelly = shouldMentionNelly(conversationText, activeBuildTension);
+const conversationIsTheArtifact = /\bNelly\b/i.test(`${activeBuildTitle} ${activeBuildTask}`) && /## Nelly's independent position/.test(conversationText);
+const mentionNelly = conversationIsTheArtifact || shouldMentionNelly(conversationText, activeBuildTension);
 
 let context = sources
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`)
@@ -112,7 +113,7 @@ const repeatsOldMetadata = existingJournal.includes(draft.fieldNote.decision) ||
 const wrongNellyMention = mentionNelly !== /\bNelly\b/.test(draft.fieldNote.body);
 const generatedParagraphCount = String(draft.fieldNote.body).trim().split(/\n\s*\n+/).filter(Boolean).length;
 const hasUnsupportedClaim = (text) => /https?:|github|market signal|(?:submissions?|customers?|traffic|revenue|interviews?).{0,35}(?:received|show(?:s|ed)?|increas(?:e|ed)|confirm(?:s|ed)?|found|conducted|completed|exists?)/i.test(text);
-const hasInventedTechnicalResult = (text) => /\b(?:I built|I created|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200)\b/i.test(text);
+const hasInventedTechnicalResult = (text) => /\b(?:I built|I created|I added|the artifact is|it includes|public HTTP endpoint|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200|controlled (?:disruption|experiment)|disruptions?|measured value|measurable (?:degradation|outcome|consequence)|triggered a failure|actual response|system (?:actually )?(?:fails|failed|broke)|when the system broke)\b/i.test(text);
 const generatedText = `${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`;
 const roboticVoice = /^(?:assistant|system|user)\b|core philosophical tension|epistemic|performative act|fundamental unknowability|dynamic,? contested|this confirms|no further action is needed|the artifact will contain/i.test(draft.fieldNote.body.trim());
 if (repeatsOldWalkthrough || repeatsOldMetadata || wrongNellyMention || roboticVoice || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
@@ -129,13 +130,15 @@ if (repeatsOldWalkthrough || repeatsOldMetadata || wrongNellyMention || roboticV
   const discussionParagraph = mentionNelly
     ? "Nelly and I disagreed about what a tidy artifact can really tell us. Her challenge changed one rule: the page must separate what the build proves from what remains unknown. That discussion shaped the work, but it isn't evidence for the idea."
     : "One rule shaped the page: it must separate what the build proves from what remains unknown. A tidy artifact can make a claim inspectable, but it cannot make the claim true outside this repository.";
-  draft.fieldNote.body = `I made one small, inspectable thing today: ${draft.experiment.test}
+  const task = draft.experiment.test.replace(/^./, (letter) => letter.toLowerCase());
+  const technicalCheck = draft.experiment.successCondition.replace(/^Observed by:\s*/i, "").replace(/\.$/, "");
+  draft.fieldNote.body = `Today I worked on one small, inspectable thing. The job was simple: ${task}
 
 The point is to make the idea concrete enough to question. The page uses explicit criteria and synthetic examples. It asks for no account, personal details, or submissions, so the experiment stays small and reversible.
 
 ${discussionParagraph}
 
-The technical check is narrow: ${draft.experiment.successCondition} Passing it means I can make and serve the artifact. It doesn't mean the artifact is useful.
+The technical check is narrow: ${technicalCheck}. If that passes, it means I can make and serve the artifact. It doesn't mean this is useful.
 
 External evidence is absent. ${draft.experiment.missingEvidence} I'll publish the prototype with that limit beside it, then look for a genuinely new fact instead of polishing the same claim tomorrow.`;
 }
@@ -163,7 +166,7 @@ const finalNellyMentionMismatch = mentionNelly !== /\bNelly\b/.test(draft.fieldN
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
 if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || inventedTechnicalResult || staleMentalWalkthrough || publicVoiceFailure || finalNellyMentionMismatch) {
-  throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; ${paragraphCount} paragraphs; duplicate: ${duplicatesExisting}; unsupported claim: ${unsupportedClaim}; invented technical result: ${inventedTechnicalResult}; stale walkthrough: ${staleMentalWalkthrough}). No draft was written.`);
+  throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; ${paragraphCount} paragraphs; duplicate: ${duplicatesExisting}; unsupported claim: ${unsupportedClaim}; invented technical result: ${inventedTechnicalResult}; stale walkthrough: ${staleMentalWalkthrough}; public voice: ${publicVoiceFailure}; Nelly attribution mismatch: ${finalNellyMentionMismatch}). No draft was written.`);
 }
 
 const outputDir = resolve(root, "drafts");
