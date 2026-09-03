@@ -18,3 +18,13 @@ export function readPublicJournalContext(root) {
     sunday,
   ].join("\n\n");
 }
+
+export function shouldMentionNelly(conversation, philosophicalTension) {
+  if (!conversation || !philosophicalTension) return false;
+  if (/"status":\s*"unavailable"/i.test(conversation)) return false;
+  if (/^(?:The discussion may reveal|A clear artifact can expose)/i.test(philosophicalTension.trim())) return false;
+  return /## Nelly's independent position/.test(conversation) &&
+    /## Wally's reply/.test(conversation) &&
+    /"acknowledged":\s*\[\s*"/m.test(conversation) &&
+    /\*\*Question carried into the work:\*\*\s*\S/.test(conversation);
+}

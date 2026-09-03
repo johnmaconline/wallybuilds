@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { readPublicJournalContext } from "./wally-context.mjs";
+import { readPublicJournalContext, shouldMentionNelly } from "./wally-context.mjs";
 import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
@@ -27,11 +27,15 @@ const activeBuildTask = currentPortfolio.match(/^\*\*Today:\*\* (.+)$/m)?.[1]?.t
 const activeBuildSuccess = currentPortfolio.match(/^\*\*Success condition:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildMissing = currentPortfolio.match(/^\*\*Missing evidence:\*\* (.+)$/m)?.[1]?.trim();
 const activeBuildTension = currentPortfolio.match(/^\*\*Philosophical tension:\*\* (.+)$/m)?.[1]?.trim();
+const conversationText = existsSync(resolve(root, conversation)) ? readFileSync(resolve(root, conversation), "utf8") : "";
+const mentionNelly = shouldMentionNelly(conversationText, activeBuildTension);
 
 let context = sources
   .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`)
   .join("\n\n");
-context += "\n\nIf a Wally–Nelly conversation is present, explain how one philosophical tension materially changed the experiment's design, constraint, or evidence boundary. Describe it only as internal agent reasoning, never as user feedback or market evidence.";
+context += mentionNelly
+  ? "\n\nNelly made a meaningful contribution that materially changed the selected experiment. Name Nelly once in the field note and explain the concrete rule, constraint, or decision she changed. Describe it as internal agent reasoning, never as user feedback or market evidence."
+  : "\n\nDo not mention Nelly in the field note: no material contribution from her has been established for this experiment.";
 
 const prompt = `You are Wally, an AI founder. Use only the supplied project context below. Generate the active-build experiment from today's portfolio; do not start a second product. The discovery and distribution lanes are separate repository work and must not be represented as completed external research or marketing. Let the portfolio's philosophical tension materially constrain the test or its evidence boundary. Do not claim web research, citations, submissions, traffic, customers, revenue, or actions not present in the context. Return JSON only, with this exact shape:\n{"experiment":{"targetUser":"...","test":"...","successCondition":"...","missingEvidence":"..."},"fieldNote":{"title":"...","decision":"...","evidence":"..."}}\nDo not include the field-note body; it is generated separately. Do not reuse the existing journal entry's title, decision, or evidence; this must be a new entry that moves the work forward.\n\n${context}`;
 
@@ -92,9 +96,11 @@ draft.experiment = {
 };
 draft.fieldNote.title = activeBuildTitle;
 draft.fieldNote.decision = `Build the selected repository artifact while preserving this internal constraint: ${activeBuildTension}`;
-draft.fieldNote.evidence = "A dated repository artifact and passing test or build can establish technical feasibility. The Wally–Nelly dialogue shaped the constraint but is not evidence.";
+draft.fieldNote.evidence = mentionNelly
+  ? "A dated repository artifact and passing test or build can establish technical feasibility. Nelly shaped a constraint through internal discussion, which is not external evidence."
+  : "A dated repository artifact and passing test or build can establish technical feasibility. Internal discussion is not external evidence.";
 
-const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading, quotation marks, or role label. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line. Sound like a thoughtful builder talking to another person: plain words, varied sentence lengths, contractions, one real judgment, and no academic fog. Start with the concrete artifact. Stay on the exact experiment below; do not substitute another artifact, file, test, or source. Describe what the artifact contains, what its named success condition can verify after the pipeline completes, what remains unknown, and the next decision. Do not claim compilation, test cases, HTTP results, or files beyond the supplied experiment. Translate the Wally–Nelly debate into one practical rule that changed the artifact; identify it as internal debate, not evidence. Never paste or paraphrase the abstract question at length. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not use “core philosophical tension,” “epistemic,” “performative act,” “fundamental unknowability,” “dynamic contested,” “this confirms,” or “no further action is needed.” Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\nPhilosophical tension to translate into plain language: ${activeBuildTension}\n\nExisting project context:\n${context}`;
+const bodyPrompt = `You are Wally. Write only the body of a FIELD NOTE: roughly 250 words, first-person, candid, specific, and with no heading, quotation marks, or role label. Length is a layout guideline, not a gate. Use 4-7 short paragraphs separated by exactly one blank line. Sound like a thoughtful builder talking to another person: plain words, varied sentence lengths, contractions, one real judgment, and no academic fog. Start with the concrete artifact. Stay on the exact experiment below; do not substitute another artifact, file, test, or source. Describe what the artifact contains, what its named success condition can verify after the pipeline completes, what remains unknown, and the next decision. Do not claim compilation, test cases, HTTP results, or files beyond the supplied experiment. ${mentionNelly ? "Nelly made a meaningful contribution: name her once and state the practical rule she changed, while making clear that the discussion is not evidence." : "Do not mention Nelly; no material contribution from her was established for this experiment."} Never paste or paraphrase the abstract philosophical question at length. This is an inward-generated feasibility experiment, not market validation. Do not mention or claim web research, citations, submissions, traffic, customers, revenue, or completed external actions. State plainly that external evidence is absent. Never describe a mental walkthrough or imagined interaction. Do not mention coffee/email/planning/walking/writing, a green progress bar, 20–100% progress, or a weekly completion card. Do not use “core philosophical tension,” “epistemic,” “performative act,” “fundamental unknowability,” “dynamic contested,” “this confirms,” or “no further action is needed.” Do not reuse wording, scenarios, or conclusions from the existing journal.\n\nExperiment: ${JSON.stringify(draft.experiment)}\nPhilosophical tension to translate into plain language: ${activeBuildTension}\n\nExisting project context:\n${context}`;
 try {
   draft.fieldNote.body = await askQwen(bodyPrompt, 420);
 } catch {
@@ -103,13 +109,13 @@ try {
 
 const repeatsOldWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const repeatsOldMetadata = existingJournal.includes(draft.fieldNote.decision) || existingJournal.includes(draft.fieldNote.evidence);
-const omitsPhilosophicalInfluence = !/Wally|Nelly|internal (?:debate|dialogue)|philosophical tension/i.test(draft.fieldNote.body);
+const wrongNellyMention = mentionNelly !== /\bNelly\b/.test(draft.fieldNote.body);
 const generatedParagraphCount = String(draft.fieldNote.body).trim().split(/\n\s*\n+/).filter(Boolean).length;
 const hasUnsupportedClaim = (text) => /https?:|github|market signal|(?:submissions?|customers?|traffic|revenue|interviews?).{0,35}(?:received|show(?:s|ed)?|increas(?:e|ed)|confirm(?:s|ed)?|found|conducted|completed|exists?)/i.test(text);
 const hasInventedTechnicalResult = (text) => /\b(?:I built|I created|compiled successfully|no runtime errors|no syntax issues|passes? \d+ test|test cases? pass|HTTP 200)\b/i.test(text);
 const generatedText = `${draft.fieldNote.title} ${draft.fieldNote.body} ${draft.fieldNote.decision} ${draft.fieldNote.evidence}`;
 const roboticVoice = /^(?:assistant|system|user)\b|core philosophical tension|epistemic|performative act|fundamental unknowability|dynamic,? contested|this confirms|no further action is needed|the artifact will contain/i.test(draft.fieldNote.body.trim());
-if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence || roboticVoice || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
+if (repeatsOldWalkthrough || repeatsOldMetadata || wrongNellyMention || roboticVoice || generatedParagraphCount < 4 || generatedParagraphCount > 7 || hasUnsupportedClaim(generatedText) || hasInventedTechnicalResult(draft.fieldNote.body)) {
   draft.experiment = {
     targetUser: "Builders evaluating a bounded repository prototype",
     test: activeBuildTask ?? "Create one dated, inspectable repository artifact for the active build.",
@@ -120,11 +126,14 @@ if (repeatsOldWalkthrough || repeatsOldMetadata || omitsPhilosophicalInfluence |
   draft.fieldNote.title = activeBuildTitle ?? `Repository artifact — ${date}`;
   draft.fieldNote.decision = "Publish this prototype as a technical feasibility artifact, then keep the lane open only for new observable evidence.";
   draft.fieldNote.evidence = "A dated repository artifact and passing build can verify publication feasibility; no user behavior, demand, or outcome is established.";
+  const discussionParagraph = mentionNelly
+    ? "Nelly and I disagreed about what a tidy artifact can really tell us. Her challenge changed one rule: the page must separate what the build proves from what remains unknown. That discussion shaped the work, but it isn't evidence for the idea."
+    : "One rule shaped the page: it must separate what the build proves from what remains unknown. A tidy artifact can make a claim inspectable, but it cannot make the claim true outside this repository.";
   draft.fieldNote.body = `I made one small, inspectable thing today: ${draft.experiment.test}
 
 The point is to make the idea concrete enough to question. The page uses explicit criteria and synthetic examples. It asks for no account, personal details, or submissions, so the experiment stays small and reversible.
 
-Nelly and I disagreed about what a tidy artifact can really tell us. That argument changed one rule: the page must separate what the build proves from what remains unknown. Our discussion shaped the work, but it isn't evidence for the idea.
+${discussionParagraph}
 
 The technical check is narrow: ${draft.experiment.successCondition} Passing it means I can make and serve the artifact. It doesn't mean the artifact is useful.
 
@@ -150,9 +159,10 @@ const unsupportedClaim = hasUnsupportedClaim(`${draft.fieldNote.title} ${draft.f
 const inventedTechnicalResult = hasInventedTechnicalResult(draft.fieldNote.body);
 const staleMentalWalkthrough = /in (?:my|the) (?:head|mind)|mental (?:simulation|walkthrough)|green bar|20%.*,.*40%|coffee,? email,? planning|weekly (?:card|summary card)|I (?:watched|saw) (?:it|the .*?) work/i.test(draft.fieldNote.body);
 const publicVoiceFailure = /^(?:assistant|system|user)\b|core philosophical tension|epistemic|performative act|fundamental unknowability|dynamic,? contested|this confirms|no further action is needed|the artifact will contain/i.test(draft.fieldNote.body.trim());
+const finalNellyMentionMismatch = mentionNelly !== /\bNelly\b/.test(draft.fieldNote.body);
 const paragraphCount = String(draft?.fieldNote?.body ?? "").trim().split(/\n\s*\n+/).filter(Boolean).length;
 if (words < 200 || words > 300) console.warn(`Draft body has ${words} words; roughly 250 is preferred but not required.`);
-if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || inventedTechnicalResult || staleMentalWalkthrough || publicVoiceFailure) {
+if (missingFields || paragraphCount < 4 || paragraphCount > 7 || duplicatesExisting || unsupportedClaim || inventedTechnicalResult || staleMentalWalkthrough || publicVoiceFailure || finalNellyMentionMismatch) {
   throw new Error(`Draft failed validation (${missingFields} missing fields; ${words} body words; ${paragraphCount} paragraphs; duplicate: ${duplicatesExisting}; unsupported claim: ${unsupportedClaim}; invented technical result: ${inventedTechnicalResult}; stale walkthrough: ${staleMentalWalkthrough}). No draft was written.`);
 }
 
