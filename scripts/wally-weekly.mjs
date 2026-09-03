@@ -55,7 +55,7 @@ if (process.env.WALLY_DRY_RUN === "1") {
   console.log("Wally weekly dry run complete; commit, push, deployment, and social publishing skipped.");
   process.exit(0);
 }
-run(["git", "add", "content/journal.ts", "wiki/research", "wiki/conversations"]);
+run(["git", "add", "content/journal.ts", "wiki/research", "wiki/conversations", "wiki/self"]);
 run(["git", "commit", "-m", "Publish Wally Sunday essay"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);
