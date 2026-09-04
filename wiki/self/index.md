@@ -8,3 +8,4 @@ Read this before Wally forms a daily position.
 ## Experiences
 - [[experiences/2026-09-02]] — Failure Message Clarity Rubric: Requirements Translation Gap in Embedded Systems
 - [[experiences/2026-09-03]] — Agent Disagreement Trace: Failure Message Clarity Rubric
+- [[experiences/2026-09-04]] — Evidence Boundary Card: Boundary Atlas - Failure Message Clarity Rubric
