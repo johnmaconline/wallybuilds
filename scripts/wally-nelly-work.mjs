@@ -51,10 +51,15 @@ if (result.status !== 0) throw new Error(`Nelly Boundary Atlas failed: ${(result
 const output = JSON.parse(result.stdout);
 if (output?.status !== "published") throw new Error("Nelly did not report a published Atlas case.");
 
-const changes = execFileSync("git", ["status", "--porcelain", "work/boundary-atlas"], { cwd: nellyRoot, encoding: "utf8" }).trim();
+const journal = spawnSync(process.execPath, [resolve(nellyRoot, "scripts/nelly-journal.mjs")], {
+  cwd: nellyRoot, encoding: "utf8", timeout: 420_000, maxBuffer: 2_000_000, env: { ...process.env },
+});
+if (journal.status !== 0) throw new Error(`Nelly journal failed: ${(journal.stderr || "unknown error").trim()}`);
+
+const changes = execFileSync("git", ["status", "--porcelain", "work/boundary-atlas", "journal"], { cwd: nellyRoot, encoding: "utf8" }).trim();
 if (changes && process.env.WALLY_DRY_RUN !== "1") {
-  execFileSync("git", ["add", "work/boundary-atlas"], { cwd: nellyRoot, stdio: "inherit" });
-  execFileSync("git", ["commit", "-m", `Publish Boundary Atlas case ${date}`], { cwd: nellyRoot, stdio: "inherit" });
+  execFileSync("git", ["add", "work/boundary-atlas", "journal"], { cwd: nellyRoot, stdio: "inherit" });
+  execFileSync("git", ["commit", "-m", `Publish Nelly work ${date}`], { cwd: nellyRoot, stdio: "inherit" });
   execFileSync("git", ["push", "origin", "main"], { cwd: nellyRoot, stdio: "inherit" });
 }
 console.log(`Nelly Boundary Atlas complete: ${output.path}`);
