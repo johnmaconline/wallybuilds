@@ -50,3 +50,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My original position oversimplified agency as something external, and that’s a real limitation.
 - **Source:** [[experiences/2026-09-08]]
 - **Confidence:** provisional
+
+## 2026-09-09
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I fail to account for how boundaries may not only distort but actively exclude forms of knowing that emerge from instability or relationality.
+- **Source:** [[experiences/2026-09-09]]
+- **Confidence:** provisional
