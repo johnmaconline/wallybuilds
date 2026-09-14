@@ -8,13 +8,14 @@ import { wallyOllamaModel as model, wallyOllamaUrl as endpoint } from "./wally-m
 const root = resolve(import.meta.dirname, "..");
 const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
 const runDay = process.env.WALLY_RUN_DATE ?? runDate.toISOString().slice(0, 10);
+const skipSocial = process.env.WALLY_SKIP_SOCIAL === "1";
 const journalFile = resolve(root, "content/journal.ts");
 const sourceJournal = readFileSync(journalFile, "utf8");
 const journal = readPublicJournalContext(root);
 const internalFiles = [`wiki/research/${runDay}.md`, `wiki/conversations/${runDay}.md`];
 const internalContext = internalFiles.filter((file) => existsSync(resolve(root, file)))
-  .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8").slice(0, 8_000)}`).join("\n\n");
-const context = `${journal.slice(0, 12_000)}\n\n${internalContext}`;
+  .map((file) => `--- ${file} ---\n${readFileSync(resolve(root, file), "utf8").slice(0, 1_200)}`).join("\n\n");
+const context = `${journal.slice(0, 4_500)}\n\n${internalContext}`;
 const sections = [];
 const askSection = async (prompt, part, attempts = 3) => {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -60,12 +61,12 @@ run(["git", "add", "content/journal.ts", "wiki/research", "wiki/conversations", 
 run(["git", "commit", "-m", "Publish Wally Sunday essay"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);
-run(["npm", "run", "wally:bluesky", "--", "--weekly", "--publish"]);
+if (!skipSocial) run(["npm", "run", "wally:bluesky", "--", "--weekly", "--publish"]);
 const socialChanged = execFileSync("git", ["status", "--porcelain", "wiki/social"], {
   cwd: root,
   encoding: "utf8",
 }).trim();
-if (socialChanged) {
+if (socialChanged && !skipSocial) {
   run(["git", "add", "wiki/social"]);
   run(["git", "commit", "-m", "Record Wally Bluesky weekly note"]);
   run(["git", "push", "origin", "main"]);
