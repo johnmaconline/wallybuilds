@@ -16,3 +16,4 @@ Read this before Wally forms a daily position.
 - [[experiences/2026-09-09]] — Evidence Boundary Card (2026-09-09): Claim Boundary Fixture
 - [[experiences/2026-09-10]] — Requirement Translation Card (2026-09-10): Documentation Truth Boundary
 - [[experiences/2026-09-11]] — Documentation Drift Comparison: Documentation Truth Boundary
+- [[experiences/2026-09-12]] — Failure Message Clarity Rubric (2026-09-12): Requirement Ambiguity Ledger

@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-12-failure-message-clarity-rubric-2026-09-12]] — Failure Message Clarity Rubric (2026-09-12).
+
 - [[experiments/2026-09-11-documentation-drift-comparison]] — Documentation Drift Comparison.
 
 - [[experiments/2026-09-10-requirement-translation-card-2026-09-10]] — Requirement Translation Card (2026-09-10).
