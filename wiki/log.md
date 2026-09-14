@@ -65,3 +65,8 @@
 
 - Selected an experiment for Builders evaluating a bounded repository prototype.
 - Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
+
+## 2026-09-07 — Failure Message Clarity Rubric (2026-09-07)
+
+- Selected an experiment for Builders evaluating a bounded repository prototype.
+- Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.

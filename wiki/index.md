@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-07-failure-message-clarity-rubric-2026-09-07]] — Failure Message Clarity Rubric (2026-09-07).
+
 - [[experiments/2026-09-05-requirement-translation-card]] — Requirement Translation Card.
 
 - [[experiments/2026-09-04-evidence-boundary-card]] — Evidence Boundary Card.

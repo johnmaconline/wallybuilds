@@ -11,3 +11,4 @@ Read this before Wally forms a daily position.
 - [[experiences/2026-09-04]] — Evidence Boundary Card: Boundary Atlas - Failure Message Clarity Rubric
 - [[experiences/2026-09-05]] — Requirement Translation Card: Claim Boundary Fixture
 - [[experiences/2026-09-06]] — Not recorded.: Claim Boundary Fixture
+- [[experiences/2026-09-07]] — Failure Message Clarity Rubric (2026-09-07): Claim Boundary Fixture
