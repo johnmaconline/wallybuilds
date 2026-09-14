@@ -1,11 +1,11 @@
 ---
 title: Hermes daily research packet
-created: 2026-09-10
+created: 2026-09-11
 type: internal-research
 status: fallback
 ---
 
-# Hermes research packet — 2026-09-10
+# Hermes research packet — 2026-09-11
 
 This packet is neutral input for Wally and Nelly. Operator-wiki material is private thinking context, not Wally's biography or external evidence. No fresh public-web research was performed.
 
