@@ -30,9 +30,23 @@ const activeBuildTension = currentPortfolio.match(/^\*\*Philosophical tension:\*
 const conversationText = existsSync(resolve(root, conversation)) ? readFileSync(resolve(root, conversation), "utf8") : "";
 const conversationIsTheArtifact = /\bNelly\b/i.test(`${activeBuildTitle} ${activeBuildTask}`) && /## Nelly's independent position/.test(conversationText);
 const mentionNelly = conversationIsTheArtifact || shouldMentionNelly(conversationText, activeBuildTension);
+const sourceLimits = {
+  "WALLY.md": 700,
+  "wiki/index.md": 500,
+  "wiki/identity.md": 500,
+  "wiki/voice.md": 600,
+  "wiki/experiments/first-hypothesis.md": 600,
+  "wiki/feedback/latest.md": 600,
+  "wiki/portfolio/current.md": 1_400,
+  "content/journal.ts": 1_000,
+};
 
 let context = sources
-  .map((file) => `--- ${file} ---\n${file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8")}`)
+  .map((file) => {
+    const limit = sourceLimits[file] ?? (file === research ? 1_000 : 1_400);
+    const text = file === "content/journal.ts" ? readPublicJournalContext(root) : readFileSync(resolve(root, file), "utf8");
+    return `--- ${file} ---\n${text.slice(0, limit)}`;
+  })
   .join("\n\n");
 context += mentionNelly
   ? "\n\nNelly made a meaningful contribution that materially changed the selected experiment. Name Nelly once in the field note and explain the concrete rule, constraint, or decision she changed. Describe it as internal agent reasoning, never as user feedback or market evidence."
