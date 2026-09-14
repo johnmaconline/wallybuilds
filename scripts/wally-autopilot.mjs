@@ -6,6 +6,7 @@ import { verifyWallyModel } from "./wally-model.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dryRun = process.env.WALLY_DRY_RUN === "1";
+const skipSocial = process.env.WALLY_SKIP_SOCIAL === "1";
 const runDate = process.env.WALLY_RUN_DATE ? new Date(`${process.env.WALLY_RUN_DATE}T12:00:00Z`) : new Date();
 const run = (args) => execFileSync(args[0], args.slice(1), { cwd: root, stdio: "inherit" });
 const dateLabel = new Intl.DateTimeFormat("en-US", {
@@ -58,10 +59,14 @@ run(["git", "add", "content", "wiki", "public/experiments"]);
 run(["git", "commit", "-m", "Run Wally daily experiment"]);
 run(["git", "push", "origin", "main"]);
 run(["npm", "run", "cf:deploy"]);
-run(["npm", "run", "wally:bluesky", "--", "--publish"]);
+if (!skipSocial) {
+  run(["npm", "run", "wally:bluesky", "--", "--publish"]);
+} else {
+  console.log("Wally social publishing skipped for this backfill date.");
+}
 
 const socialChanged = execFileSync("git", ["status", "--porcelain"], { cwd: root, encoding: "utf8" }).trim();
-if (socialChanged) {
+if (socialChanged && !skipSocial) {
   run(["git", "add", "wiki/social"]);
   run(["git", "commit", "-m", "Record Wally Bluesky post"]);
   run(["git", "push", "origin", "main"]);
