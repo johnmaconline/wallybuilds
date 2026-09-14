@@ -167,7 +167,7 @@ NELLY'S PRIOR INDEPENDENT WORK (reasoning, not external evidence):
 ${evidence.nellyIndependentWork}
 
 VERIFIED PROJECT EVIDENCE:
-${JSON.stringify(conversationEvidence)}`, validInitial, 3, {
+${JSON.stringify(conversationEvidence)}`, validInitial, 1, {
   position: "I should make one repository claim easy to inspect before treating it as useful.",
   candidate_ideas: [
     { title: "Claim Boundary Fixture", problem: "Technical notes often blur what a file proves and what remains unknown.", test: "Create a dated static fixture that pairs each claim with one repository check and one explicit limit.", success_condition: "The fixture exists and the site build can include it.", missing_evidence: "No evidence shows that the fixture improves anyone's decisions." },
@@ -231,7 +231,7 @@ NELLY INITIAL:
 ${JSON.stringify(nellyInitial)}
 
 PROJECT EVIDENCE:
-${JSON.stringify(conversationEvidence)}`, validReply, 3, {
+${JSON.stringify(conversationEvidence)}`, validReply, 1, {
   acknowledged: ["Nelly's caution is useful: clear labels do not create external evidence."],
   disagreements: ["A small public fixture is still worthwhile when it names its own limit."],
   selected_direction: "Claim Boundary Fixture",
@@ -275,7 +275,7 @@ NELLY'S PRESSURE TEST:
 ${JSON.stringify(nellyFinal)}
 
 SHARED RECORDED AGENT HISTORY:
-${evidence.sharedAgentHistory}`, validOpening, 3, {
+${evidence.sharedAgentHistory}`, validOpening, 1, {
   position: "Building can clarify a claim without turning the claim into knowledge about other people.",
   stakes: "If I confuse an inspectable artifact with proof of usefulness, I make the uncertainty harder to see.",
   question: "When does a clearer explanation become a substitute for the evidence it is meant to expose?",
@@ -299,7 +299,7 @@ YOUR OPENING:
 ${JSON.stringify(wallyPhilosophy)}
 
 NELLY'S RESPONSE:
-${JSON.stringify(nellyPhilosophy)}`, validRejoinder, 3, {
+${JSON.stringify(nellyPhilosophy)}`, validRejoinder, 1, {
   response: "The artifact should make its limit visible rather than asking its polish to carry the argument.",
   concession: "A well-labeled fixture can still give me misplaced confidence.",
   question: "What would keep a useful technical explanation from becoming a claim of usefulness?",
