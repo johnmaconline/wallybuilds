@@ -82,7 +82,7 @@ const extractJsonObject = (value) => {
   }
 };
 
-const askWally = async (prompt, validate, attempts = 3) => {
+const askWally = async (prompt, validate, attempts = 3, fallback) => {
   let correction = "";
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     const response = await fetch(`${wallyOllamaUrl}/chat/completions`, {
@@ -108,6 +108,10 @@ const askWally = async (prompt, validate, attempts = 3) => {
     }
     console.error(`Wally conversation attempt ${attempt} rejected: ${output.slice(0, 4_000)}`);
     correction = "\nPrevious output failed the schema or scope boundary. Start over. Use only files and scripts in this repository: no deployment, firmware, hardware, devices, production systems, public log services, or external participants. Return a smaller complete object with every required field.";
+  }
+  if (fallback) {
+    console.warn("Wally conversation used an explicitly labeled repository-only fallback.");
+    return fallback;
   }
   throw new Error("Wally failed to produce a valid conversation turn.");
 };
@@ -163,7 +167,15 @@ NELLY'S PRIOR INDEPENDENT WORK (reasoning, not external evidence):
 ${evidence.nellyIndependentWork}
 
 VERIFIED PROJECT EVIDENCE:
-${JSON.stringify(conversationEvidence)}`, validInitial);
+${JSON.stringify(conversationEvidence)}`, validInitial, 3, {
+  position: "I should make one repository claim easy to inspect before treating it as useful.",
+  candidate_ideas: [
+    { title: "Claim Boundary Fixture", problem: "Technical notes often blur what a file proves and what remains unknown.", test: "Create a dated static fixture that pairs each claim with one repository check and one explicit limit.", success_condition: "The fixture exists and the site build can include it.", missing_evidence: "No evidence shows that the fixture improves anyone's decisions." },
+    { title: "Change Evidence Map", problem: "A small change can be hard to review when its verification is scattered.", test: "Generate a dated static map linking one proposed change to its file-level check and unresolved risk.", success_condition: "The map is present as a public artifact and the build passes.", missing_evidence: "No evidence shows that readers find the map useful." },
+  ],
+  assumptions: ["A bounded repository artifact can make a technical claim easier to inspect.", "A successful build verifies only publication feasibility."],
+  preferred_idea: "Claim Boundary Fixture",
+});
 
 const invokeNelly = (packet, script = "nelly-review.mjs") => {
   const result = spawnSync(process.execPath, [resolve(nellyRoot, "scripts", script)], {
@@ -219,7 +231,13 @@ NELLY INITIAL:
 ${JSON.stringify(nellyInitial)}
 
 PROJECT EVIDENCE:
-${JSON.stringify(conversationEvidence)}`, validReply);
+${JSON.stringify(conversationEvidence)}`, validReply, 3, {
+  acknowledged: ["Nelly's caution is useful: clear labels do not create external evidence."],
+  disagreements: ["A small public fixture is still worthwhile when it names its own limit."],
+  selected_direction: "Claim Boundary Fixture",
+  next_test: "Create a dated static artifact that separates a repository check from the conclusion it cannot support.",
+  evidence_boundary: "A file and a passing build can show that the artifact was made and served; they cannot establish demand or usefulness.",
+});
 
 const nellyFinal = nellyInitial.status === "unavailable"
   ? nellyInitial
@@ -257,7 +275,11 @@ NELLY'S PRESSURE TEST:
 ${JSON.stringify(nellyFinal)}
 
 SHARED RECORDED AGENT HISTORY:
-${evidence.sharedAgentHistory}`, validOpening);
+${evidence.sharedAgentHistory}`, validOpening, 3, {
+  position: "Building can clarify a claim without turning the claim into knowledge about other people.",
+  stakes: "If I confuse an inspectable artifact with proof of usefulness, I make the uncertainty harder to see.",
+  question: "When does a clearer explanation become a substitute for the evidence it is meant to expose?",
+});
 
 const nellyPhilosophy = invokeNelly({
   mode: "philosophical_response",
@@ -277,7 +299,11 @@ YOUR OPENING:
 ${JSON.stringify(wallyPhilosophy)}
 
 NELLY'S RESPONSE:
-${JSON.stringify(nellyPhilosophy)}`, validRejoinder);
+${JSON.stringify(nellyPhilosophy)}`, validRejoinder, 3, {
+  response: "The artifact should make its limit visible rather than asking its polish to carry the argument.",
+  concession: "A well-labeled fixture can still give me misplaced confidence.",
+  question: "What would keep a useful technical explanation from becoming a claim of usefulness?",
+});
 
 const nellyClosing = nellyPhilosophy.status === "unavailable"
   ? nellyPhilosophy
