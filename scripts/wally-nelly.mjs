@@ -25,24 +25,24 @@ const episode = (file) => {
   const text = readFileSync(resolve(conversationDir, file), "utf8");
   const concession = text.match(/^\*\*Concession:\*\* (.+)$/m)?.[1];
   const carriedQuestion = text.match(/^\*\*Question carried into the work:\*\* (.+)$/m)?.[1];
-  return `- ${file.slice(0, 10)} | Wally selected: ${shorten(jsonField(text, "selected_direction"), 120)} | Wally conceded: ${shorten(concession, 120)} | Nelly left open: ${shorten(carriedQuestion, 150)}`;
+  return `- ${file.slice(0, 10)} | Wally selected: ${shorten(jsonField(text, "selected_direction"), 80)} | Wally conceded: ${shorten(concession, 80)} | Nelly left open: ${shorten(carriedQuestion, 100)}`;
 };
-const recentDetailedHistory = priorConversationFiles.slice(-2).map((file) => {
+const recentDetailedHistory = priorConversationFiles.slice(-1).map((file) => {
   const text = readFileSync(resolve(conversationDir, file), "utf8");
-  return `--- recent detail: ${file} ---\n${text.slice(0, 1_000)}\n\n${text.slice(-2_200)}`;
+  return `--- recent detail: ${file} ---\n${text.slice(0, 500)}\n\n${text.slice(-800)}`;
 }).join("\n\n");
 const sharedAgentHistory = priorConversationFiles.length
   ? `COMPLETE EPISODIC TIMELINE\n${priorConversationFiles.map(episode).join("\n")}\n\nRECENT DETAIL\n${recentDetailedHistory}`
   : "No prior Wally–Nelly conversation is recorded yet.";
 
-const read = (file, limit = 12_000) =>
+const read = (file, limit = 3_000) =>
   readFileSync(resolve(root, file), "utf8").slice(0, limit);
 const evidence = {
-  journal: readPublicJournalContext(root).slice(0, 16_000),
-  experimentIndex: read("wiki/index.md"),
+  journal: readPublicJournalContext(root).slice(0, 1_200),
+  experimentIndex: read("wiki/index.md", 1_200),
   feedback: read("wiki/feedback/latest.md", 4_000),
-  hermesResearch: existsSync(hermesPacketFile) ? readFileSync(hermesPacketFile, "utf8").slice(0, 14_000) : "Hermes was unavailable; no research packet exists.",
-  nellyIndependentWork: existsSync(nellyAtlasIndex) ? readFileSync(nellyAtlasIndex, "utf8").slice(0, 12_000) : "Nelly has no independent work recorded yet.",
+  hermesResearch: existsSync(hermesPacketFile) ? readFileSync(hermesPacketFile, "utf8").slice(0, 2_200) : "Hermes was unavailable; no research packet exists.",
+  nellyIndependentWork: existsSync(nellyAtlasIndex) ? readFileSync(nellyAtlasIndex, "utf8").slice(0, 1_400) : "Nelly has no independent work recorded yet.",
   sharedAgentHistory,
 };
 const conversationEvidence = {
@@ -54,12 +54,12 @@ const conversationEvidence = {
   nelly_boundary_atlas: evidence.nellyIndependentWork,
 };
 const wallyLens = [
-  read("wiki/identity.md", 4_000),
-  read("wiki/seeds/operator-principles.md", 5_000),
-  read("wiki/seeds/operator-background.md", 6_000),
-  read("wiki/self/index.md", 8_000),
-  read("wiki/self/worldview.md", 4_000),
-  read("wiki/self/beliefs.md", 8_000),
+  read("wiki/identity.md", 900),
+  read("wiki/seeds/operator-principles.md", 1_000),
+  read("wiki/seeds/operator-background.md", 800),
+  read("wiki/self/index.md", 1_200),
+  read("wiki/self/worldview.md", 1_000),
+  read("wiki/self/beliefs.md", 1_200),
 ].join("\n\n");
 
 const extractJsonObject = (value) => {
@@ -91,7 +91,7 @@ const askWally = async (prompt, validate, attempts = 3, fallback) => {
       body: JSON.stringify({
         model: wallyOllamaModel,
         messages: [{ role: "user", content: `${prompt}\n${correction}` }],
-        max_tokens: 900,
+        max_tokens: 500,
         temperature: 0.5,
         response_format: { type: "json_object" },
       }),
