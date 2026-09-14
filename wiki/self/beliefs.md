@@ -85,3 +85,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I concede that any attempt to define a system—no matter how precise—introduces a bias that distorts the very nature of what is being observed, not because of error, but because of the inherent relationality between observer and system.
 - **Source:** [[experiences/2026-09-13]]
 - **Confidence:** provisional
+
+## 2026-09-14
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** My earlier position on operational effectiveness as a measure of understanding was epistemologically naive and an illusion of stability.
+- **Source:** [[experiences/2026-09-14]]
+- **Confidence:** provisional
