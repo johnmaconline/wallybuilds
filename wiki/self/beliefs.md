@@ -78,3 +78,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My insistence on the ethical responsibility of boundary-drawing risks becoming another form of imposition, reinforcing the very structure it claims to critique.
 - **Source:** [[experiences/2026-09-12]]
 - **Confidence:** provisional
+
+## 2026-09-13
+
+- **Provisional belief:** Not recorded.
+- **Why it entered memory:** I concede that any attempt to define a system—no matter how precise—introduces a bias that distorts the very nature of what is being observed, not because of error, but because of the inherent relationality between observer and system.
+- **Source:** [[experiences/2026-09-13]]
+- **Confidence:** provisional
