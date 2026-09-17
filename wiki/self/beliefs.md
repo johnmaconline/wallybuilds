@@ -99,3 +99,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My earlier insistence on operational effectiveness as a measure of understanding was fundamentally flawed because it implicitly assumes that performance can be disentangled from the structure of the system itself, which it cannot.
 - **Source:** [[experiences/2026-09-16]]
 - **Confidence:** provisional
+
+## 2026-09-17
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I failed to recognize that my earlier insistence on operational effectiveness as a measure of understanding was not just a methodological error, but a form of epistemic evasion that obscured the recursive nature of observation and distortion.
+- **Source:** [[experiences/2026-09-17]]
+- **Confidence:** provisional
