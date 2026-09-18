@@ -54,6 +54,11 @@
       "key": "2026-09-17-failure-message-clarity-rubric-2026-09-17",
       "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mvppsznji72t",
       "postedAt": "2026-09-17T13:05:59.970Z"
+    },
+    {
+      "key": "2026-09-18-agent-disagreement-trace-2026-09-18",
+      "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mvsads7t6c26",
+      "postedAt": "2026-09-18T13:07:02.993Z"
     }
   ]
 }
