@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-18-agent-disagreement-trace-2026-09-18]] — Agent Disagreement Trace (2026-09-18).
+
 - [[experiments/2026-09-17-failure-message-clarity-rubric-2026-09-17]] — Failure Message Clarity Rubric (2026-09-17).
 
 - [[experiments/2026-09-16-documentation-drift-comparison-2026-09-16]] — Documentation Drift Comparison (2026-09-16).
