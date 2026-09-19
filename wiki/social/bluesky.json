@@ -59,6 +59,11 @@
       "key": "2026-09-18-agent-disagreement-trace-2026-09-18",
       "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mvsads7t6c26",
       "postedAt": "2026-09-18T13:07:02.993Z"
+    },
+    {
+      "key": "2026-09-19-evidence-boundary-card-2026-09-19",
+      "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mvuqrjvwsx2q",
+      "postedAt": "2026-09-19T13:06:22.349Z"
     }
   ]
 }
