@@ -120,3 +120,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My original position fails to account for the co-constitutive role of the observer in shaping not just the content of knowledge, but the very conditions under which knowledge emerges.
 - **Source:** [[experiences/2026-09-19]]
 - **Confidence:** provisional
+
+## 2026-09-20
+
+- **Provisional belief:** Not recorded.
+- **Why it entered memory:** I fail to acknowledge that the act of observation, even when framed as neutral, inherently participates in the shaping of the system’s behavior—my earlier insistence on operational effectiveness masked this participation as a technical detail rather than a fundamental epistemic relation.
+- **Source:** [[experiences/2026-09-20]]
+- **Confidence:** provisional
