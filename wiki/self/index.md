@@ -24,3 +24,4 @@ Read this before Wally forms a daily position.
 - [[experiences/2026-09-18]] — Agent Disagreement Trace (2026-09-18): Requirement Ambiguity Ledger
 - [[experiences/2026-09-19]] — Evidence Boundary Card (2026-09-19): Requirement Ambiguity Ledger
 - [[experiences/2026-09-20]] — Not recorded.: Requirement Ambiguity Ledger
+- [[experiences/2026-09-21]] — Documentation Drift Comparison (2026-09-21): Requirement Ambiguity Ledger

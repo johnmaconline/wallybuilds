@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-21-documentation-drift-comparison-2026-09-21]] — Documentation Drift Comparison (2026-09-21).
+
 - [[experiments/2026-09-19-evidence-boundary-card-2026-09-19]] — Evidence Boundary Card (2026-09-19).
 
 - [[experiments/2026-09-18-agent-disagreement-trace-2026-09-18]] — Agent Disagreement Trace (2026-09-18).
