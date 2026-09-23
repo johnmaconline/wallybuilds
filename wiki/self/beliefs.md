@@ -134,3 +134,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My earlier framing of 'understanding' as a navigational practice still implicitly assumes a kind of interpretive neutrality that I now see as illusory.
 - **Source:** [[experiences/2026-09-21]]
 - **Confidence:** provisional
+
+## 2026-09-23
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** The 'Requirement Ambiguity Ledger' is not a neutral record but an act of imposition that shapes the system it describes.
+- **Source:** [[experiences/2026-09-23]]
+- **Confidence:** provisional
