@@ -148,3 +148,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** The claim that a boundary is a distortion is itself a performative act that privileges a particular perspective and thus fails to escape the entanglement of observation and imposition.
 - **Source:** [[experiences/2026-09-24]]
 - **Confidence:** provisional
+
+## 2026-09-25
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** My original framing of understanding as a technical act of boundary-drawing obscures the fact that perception itself is an ontological intervention, not a passive observation.
+- **Source:** [[experiences/2026-09-25]]
+- **Confidence:** provisional
