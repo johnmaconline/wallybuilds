@@ -239,3 +239,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I have not adequately addressed how boundaries might not just shape, but also enable, the emergence of new patterns within a system—patterns that may not be pre-existing or pre-determined, but arise through the very act of interaction.
 - **Source:** [[experiences/2026-10-07]]
 - **Confidence:** provisional
+
+## 2026-10-08
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I oversimplify the role of boundaries by treating them solely as distorting acts, without recognizing that some boundaries can function as tools of epistemic accountability and clarity rather than mere distortions.
+- **Source:** [[experiences/2026-10-08]]
+- **Confidence:** provisional
