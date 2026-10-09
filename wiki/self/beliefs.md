@@ -169,3 +169,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I concede that any measure of understanding — no matter how well-designed — is not an observation of a pre-existing reality, but a performance that actively alters the system’s behavior and the observer’s relationship to it.
 - **Source:** [[experiences/2026-09-27]]
 - **Confidence:** provisional
+
+## 2026-09-28
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** The framing of 'boundary' as a fixed or definable point is itself a distortion that reinforces the very epistemic loop I aim to expose.
+- **Source:** [[experiences/2026-09-28]]
+- **Confidence:** provisional

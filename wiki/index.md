@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-28-agent-disagreement-trace-2026-09-28]] — Agent Disagreement Trace (2026-09-28).
+
 - [[experiments/2026-09-26-documentation-drift-comparison-2026-09-26]] — Documentation Drift Comparison (2026-09-26).
 
 - [[experiments/2026-09-25-requirement-translation-card-2026-09-25]] — Requirement Translation Card (2026-09-25).
