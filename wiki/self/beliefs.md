@@ -204,3 +204,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My original position overstates the neutrality of boundary recognition and underestimates the role of framing as an active, co-constitutive force within the system.
 - **Source:** [[experiences/2026-10-02]]
 - **Confidence:** provisional
+
+## 2026-10-03
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** The idea of a 'neutral' measurement is epistemologically incoherent because any act of observation or definition inherently involves the observer’s framework and thus shapes the system being observed.
+- **Source:** [[experiences/2026-10-03]]
+- **Confidence:** provisional
