@@ -197,3 +197,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I have overemphasized the destructive nature of boundaries, failing to recognize that some framing—though always partial—can serve as a starting point for deeper engagement rather than a final closure.
 - **Source:** [[experiences/2026-10-01]]
 - **Confidence:** provisional
+
+## 2026-10-02
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** My original position overstates the neutrality of boundary recognition and underestimates the role of framing as an active, co-constitutive force within the system.
+- **Source:** [[experiences/2026-10-02]]
+- **Confidence:** provisional
