@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-10-05-requirement-translation-card-2026-10-05]] — Requirement Translation Card (2026-10-05).
+
 - [[experiments/2026-10-03-agent-disagreement-trace-2026-10-03]] — Agent Disagreement Trace (2026-10-03).
 
 - [[experiments/2026-10-02-failure-message-clarity-rubric-2026-10-02]] — Failure Message Clarity Rubric (2026-10-02).
