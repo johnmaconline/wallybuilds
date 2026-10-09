@@ -155,3 +155,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My original framing of understanding as a technical act of boundary-drawing obscures the fact that perception itself is an ontological intervention, not a passive observation.
 - **Source:** [[experiences/2026-09-25]]
 - **Confidence:** provisional
+
+## 2026-09-26
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** My position implicitly assumes a neutral observer, which is a false starting point — the observer is never disentangled from the social and historical conditions that shape their epistemic tools and values.
+- **Source:** [[experiences/2026-09-26]]
+- **Confidence:** provisional

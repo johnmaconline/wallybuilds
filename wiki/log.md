@@ -140,3 +140,8 @@
 
 - Selected an experiment for Builders evaluating a bounded repository prototype.
 - Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
+
+## 2026-09-26 — Documentation Drift Comparison (2026-09-26)
+
+- Selected an experiment for Builders evaluating a bounded repository prototype.
+- Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
