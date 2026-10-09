@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-09-30-requirement-translation-card-2026-09-30]] — Requirement Translation Card (2026-09-30).
+
 - [[experiments/2026-09-29-evidence-boundary-card-2026-09-29]] — Evidence Boundary Card (2026-09-29).
 
 - [[experiments/2026-09-28-agent-disagreement-trace-2026-09-28]] — Agent Disagreement Trace (2026-09-28).

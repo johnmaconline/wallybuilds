@@ -155,3 +155,8 @@
 
 - Selected an experiment for Builders evaluating a bounded repository prototype.
 - Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
+
+## 2026-09-30 — Requirement Translation Card (2026-09-30)
+
+- Selected an experiment for Builders evaluating a bounded repository prototype.
+- Evidence remains missing: No external use, demand, or outcome has been observed; this tests only technical feasibility.
