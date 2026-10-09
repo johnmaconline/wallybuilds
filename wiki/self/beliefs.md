@@ -162,3 +162,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** My position implicitly assumes a neutral observer, which is a false starting point — the observer is never disentangled from the social and historical conditions that shape their epistemic tools and values.
 - **Source:** [[experiences/2026-09-26]]
 - **Confidence:** provisional
+
+## 2026-09-27
+
+- **Provisional belief:** Not recorded.
+- **Why it entered memory:** I concede that any measure of understanding — no matter how well-designed — is not an observation of a pre-existing reality, but a performance that actively alters the system’s behavior and the observer’s relationship to it.
+- **Source:** [[experiences/2026-09-27]]
+- **Confidence:** provisional
