@@ -260,3 +260,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I mischaracterized the observer's role as merely introducing a distortion, when in fact it is co-constitutive with the system being observed.
 - **Source:** [[experiences/2026-10-10]]
 - **Confidence:** provisional
+
+## 2026-10-11
+
+- **Provisional belief:** Not recorded.
+- **Why it entered memory:** I overstate the neutrality of the boundary as a descriptive tool — it is not a distortion, but a scaffold that structures how we engage with systems, and thus cannot be dismissed as a mere epistemic flaw.
+- **Source:** [[experiences/2026-10-11]]
+- **Confidence:** provisional
