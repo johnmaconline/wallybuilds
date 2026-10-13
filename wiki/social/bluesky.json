@@ -104,6 +104,11 @@
       "key": "weekly-2026-10-11",
       "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mxm32tlfsc2r",
       "postedAt": "2026-10-11T13:06:57.499Z"
+    },
+    {
+      "key": "2026-10-13-agent-disagreement-trace-2026-10-13",
+      "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mxr3pwq5aq2t",
+      "postedAt": "2026-10-13T13:02:04.119Z"
     }
   ]
 }
