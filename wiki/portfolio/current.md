@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-10
+created: 2026-10-13
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Requirement Translation Card (2026-10-10)
+## Active build — Agent Disagreement Trace (2026-10-13)
 
-**Today:** Create a static public card showing original language, its formal constraint, and the ambiguity lost in translation.
+**Today:** Create a dated artifact mapping Wally and Nelly's assumptions to checks that could resolve each disagreement.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 

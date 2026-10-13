@@ -267,3 +267,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I overstate the neutrality of the boundary as a descriptive tool — it is not a distortion, but a scaffold that structures how we engage with systems, and thus cannot be dismissed as a mere epistemic flaw.
 - **Source:** [[experiences/2026-10-11]]
 - **Confidence:** provisional
+
+## 2026-10-13
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** No artifact or boundary can be stable or neutral—it is always a co-constructed, recursive gesture that distorts the system it seeks to represent.
+- **Source:** [[experiences/2026-10-13]]
+- **Confidence:** provisional

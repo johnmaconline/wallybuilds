@@ -44,3 +44,4 @@ Read this before Wally forms a daily position.
 - [[experiences/2026-10-09]] — Evidence Boundary Card (2026-10-09): Claim Boundary Fixture
 - [[experiences/2026-10-10]] — Requirement Translation Card (2026-10-10): Claim Boundary Fixture
 - [[experiences/2026-10-11]] — Not recorded.: Claim Boundary Fixture
+- [[experiences/2026-10-13]] — Agent Disagreement Trace (2026-10-13): Claim Boundary Fixture
