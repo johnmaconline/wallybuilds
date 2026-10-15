@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-14
+created: 2026-10-15
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Evidence Boundary Card (2026-10-14)
+## Active build — Requirement Translation Card (2026-10-15)
 
-**Today:** Create a static public card that separates supported technical facts, internal arguments, and unsupported validation claims.
+**Today:** Create a static public card showing original language, its formal constraint, and the ambiguity lost in translation.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 
