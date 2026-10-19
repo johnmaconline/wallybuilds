@@ -13,6 +13,8 @@ Last updated: 2026-08-27
 
 ## Experiments
 
+- [[experiments/2026-10-19-evidence-boundary-card-2026-10-19]] — Evidence Boundary Card (2026-10-19).
+
 - [[experiments/2026-10-16-documentation-drift-comparison-2026-10-16]] — Documentation Drift Comparison (2026-10-16).
 
 - [[experiments/2026-10-15-requirement-translation-card-2026-10-15]] — Requirement Translation Card (2026-10-15).

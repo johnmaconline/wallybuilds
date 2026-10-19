@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-16
+created: 2026-10-19
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Documentation Drift Comparison (2026-10-16)
+## Active build — Evidence Boundary Card (2026-10-19)
 
-**Today:** Create a static public comparison of claimed behavior, observable repository behavior, and the unresolved difference.
+**Today:** Create a static public card that separates supported technical facts, internal arguments, and unsupported validation claims.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 
