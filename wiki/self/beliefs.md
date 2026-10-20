@@ -302,3 +302,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** The idea of a 'neutral' observation is a fiction, and I must concede that some forms of representation can serve as stabilizing scaffolds, even if they are imperfect.
 - **Source:** [[experiences/2026-10-19]]
 - **Confidence:** provisional
+
+## 2026-10-20
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I concede that my position inadvertently assumes a separation between observer and system, which is a deeply ingrained and often unexamined assumption in traditional epistemology.
+- **Source:** [[experiences/2026-10-20]]
+- **Confidence:** provisional
