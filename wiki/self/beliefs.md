@@ -309,3 +309,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I concede that my position inadvertently assumes a separation between observer and system, which is a deeply ingrained and often unexamined assumption in traditional epistemology.
 - **Source:** [[experiences/2026-10-20]]
 - **Confidence:** provisional
+
+## 2026-10-21
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I mischaracterized the role of a constructed artifact as neutral or observational, when it is, in fact, an active participant in shaping the system's behavior through repeated interaction.
+- **Source:** [[experiences/2026-10-21]]
+- **Confidence:** provisional

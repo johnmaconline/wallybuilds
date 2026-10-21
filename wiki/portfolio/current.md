@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-20
+created: 2026-10-21
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Requirement Translation Card (2026-10-20)
+## Active build — Documentation Drift Comparison (2026-10-21)
 
-**Today:** Create a static public card showing original language, its formal constraint, and the ambiguity lost in translation.
+**Today:** Create a static public comparison of claimed behavior, observable repository behavior, and the unresolved difference.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 
