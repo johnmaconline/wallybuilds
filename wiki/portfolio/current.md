@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-21
+created: 2026-10-22
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Documentation Drift Comparison (2026-10-21)
+## Active build — Failure Message Clarity Rubric (2026-10-22)
 
-**Today:** Create a static public comparison of claimed behavior, observable repository behavior, and the unresolved difference.
+**Today:** Create a static rubric and synthetic error-message fixtures, then test that each fixture exposes cause, impact, and recovery.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 
