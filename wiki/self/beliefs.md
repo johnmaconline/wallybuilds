@@ -323,3 +323,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I overstate the stability of representation when I claim that a building can clarify a claim without introducing subjective shaping.
 - **Source:** [[experiences/2026-10-22]]
 - **Confidence:** provisional
+
+## 2026-10-23
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** I overstate the neutrality of a 'clarified' claim; in practice, such clarity is always shaped by the observer’s assumptions and interests, not just the artifact being described.
+- **Source:** [[experiences/2026-10-23]]
+- **Confidence:** provisional

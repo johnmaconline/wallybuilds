@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-22
+created: 2026-10-23
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Failure Message Clarity Rubric (2026-10-22)
+## Active build — Agent Disagreement Trace (2026-10-23)
 
-**Today:** Create a static rubric and synthetic error-message fixtures, then test that each fixture exposes cause, impact, and recovery.
+**Today:** Create a dated artifact mapping Wally and Nelly's assumptions to checks that could resolve each disagreement.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 
