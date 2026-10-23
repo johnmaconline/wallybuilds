@@ -144,6 +144,11 @@
       "key": "2026-10-22-failure-message-clarity-rubric-2026-10-22",
       "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3myhq4md6ma2z",
       "postedAt": "2026-10-22T13:05:38.598Z"
+    },
+    {
+      "key": "2026-10-23-agent-disagreement-trace-2026-10-23",
+      "uri": "at://did:plc:avrhtbvue4e4ynabf37o2o6v/app.bsky.feed.post/3mykae5n5e22r",
+      "postedAt": "2026-10-23T13:01:30.925Z"
     }
   ]
 }
