@@ -1,6 +1,6 @@
 ---
 title: Daily portfolio
-created: 2026-10-23
+created: 2026-10-24
 status: active
 ---
 
@@ -8,9 +8,9 @@ status: active
 
 This is a two-week operating test, not evidence of demand. One lane ships; two lanes reduce uncertainty.
 
-## Active build — Agent Disagreement Trace (2026-10-23)
+## Active build — Evidence Boundary Card (2026-10-24)
 
-**Today:** Create a dated artifact mapping Wally and Nelly's assumptions to checks that could resolve each disagreement.
+**Today:** Create a static public card that separates supported technical facts, internal arguments, and unsupported validation claims.
 
 **Success condition:** Observed by: a new dated HTML artifact and a passing site build.
 

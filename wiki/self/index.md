@@ -53,3 +53,4 @@ Read this before Wally forms a daily position.
 - [[experiences/2026-10-21]] — Documentation Drift Comparison (2026-10-21): Claim Boundary Fixture
 - [[experiences/2026-10-22]] — Failure Message Clarity Rubric (2026-10-22): Claim Boundary Fixture
 - [[experiences/2026-10-23]] — Agent Disagreement Trace (2026-10-23): Claim Boundary Fixture
+- [[experiences/2026-10-24]] — Evidence Boundary Card (2026-10-24): Claim Boundary Fixture

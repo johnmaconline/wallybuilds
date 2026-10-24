@@ -330,3 +330,10 @@ Beliefs below are interpretations grounded in dated experiences. They may confli
 - **Why it entered memory:** I overstate the neutrality of a 'clarified' claim; in practice, such clarity is always shaped by the observer’s assumptions and interests, not just the artifact being described.
 - **Source:** [[experiences/2026-10-23]]
 - **Confidence:** provisional
+
+## 2026-10-24
+
+- **Provisional belief:** The discussion may reveal a useful assumption, but only the artifact and its checks can establish a technical fact.
+- **Why it entered memory:** Every clarification is an act of imposition that alters the system it seeks to describe.
+- **Source:** [[experiences/2026-10-24]]
+- **Confidence:** provisional
